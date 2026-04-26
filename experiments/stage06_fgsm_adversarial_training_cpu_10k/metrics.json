@@ -1,0 +1,94 @@
+﻿{
+  "config": {
+    "data_dir": "data",
+    "output_dir": "experiments\\stage06_fgsm_adversarial_training_cpu_10k",
+    "epochs": 5,
+    "batch_size": 64,
+    "train_size": 10000,
+    "test_size": 2000,
+    "attack_eval_size": 1000,
+    "learning_rate": 0.001,
+    "seed": 42,
+    "epsilon": 0.03137254901960784,
+    "alpha": 0.00784313725490196,
+    "pgd_steps": 5,
+    "training_mode": "fgsm_at",
+    "adv_weight": 0.5,
+    "device": "cpu"
+  },
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 2.103446312713623,
+      "train_accuracy": 0.285,
+      "clean_test_loss": 1.7699026317596436,
+      "clean_test_accuracy": 0.386,
+      "worst_class_accuracy": 0.1111111111111111,
+      "train_clean_loss": 1.9996985187530518,
+      "train_adv_loss": 2.207194115257263
+    },
+    {
+      "epoch": 2,
+      "train_loss": 1.867006549835205,
+      "train_accuracy": 0.4158,
+      "clean_test_loss": 1.6017993402481079,
+      "clean_test_accuracy": 0.4345,
+      "worst_class_accuracy": 0.057692307692307696,
+      "train_clean_loss": 1.650696625328064,
+      "train_adv_loss": 2.083316463470459
+    },
+    {
+      "epoch": 3,
+      "train_loss": 1.7733799537658692,
+      "train_accuracy": 0.4705,
+      "clean_test_loss": 1.5149934568405152,
+      "clean_test_accuracy": 0.467,
+      "worst_class_accuracy": 0.14432989690721648,
+      "train_clean_loss": 1.5169800226211547,
+      "train_adv_loss": 2.029779888534546
+    },
+    {
+      "epoch": 4,
+      "train_loss": 1.7162293167114258,
+      "train_accuracy": 0.4987,
+      "clean_test_loss": 1.4317056484222412,
+      "clean_test_accuracy": 0.473,
+      "worst_class_accuracy": 0.09523809523809523,
+      "train_clean_loss": 1.4376281677246094,
+      "train_adv_loss": 1.9948304754257202
+    },
+    {
+      "epoch": 5,
+      "train_loss": 1.6794663782119752,
+      "train_accuracy": 0.5206,
+      "clean_test_loss": 1.402307375907898,
+      "clean_test_accuracy": 0.512,
+      "worst_class_accuracy": 0.26455026455026454,
+      "train_clean_loss": 1.382016900062561,
+      "train_adv_loss": 1.9769158548355104
+    }
+  ],
+  "clean_eval": {
+    "loss": 1.402307375907898,
+    "accuracy": 0.512,
+    "worst_class_accuracy": 0.26455026455026454,
+    "class_accuracy": {
+      "0": 0.5254237288135594,
+      "1": 0.7692307692307693,
+      "2": 0.26455026455026454,
+      "3": 0.49038461538461536,
+      "4": 0.36597938144329895,
+      "5": 0.27638190954773867,
+      "6": 0.6648936170212766,
+      "7": 0.5404040404040404,
+      "8": 0.7511737089201878,
+      "9": 0.4272300469483568
+    }
+  },
+  "attack_eval": {
+    "attack_eval_size": 1024,
+    "fgsm_adversarial_accuracy": 0.224609375,
+    "targeted_pgd_original_accuracy": 0.39453125,
+    "targeted_pgd_target_success_rate": 0.2119140625
+  }
+}

@@ -1,0 +1,27 @@
+﻿实验配置：{
+  "data_dir": "data",
+  "output_dir": "experiments\\stage04_targeted_pgd_adversarial_training_cpu_5k",
+  "epochs": 2,
+  "batch_size": 64,
+  "train_size": 3000,
+  "test_size": 1000,
+  "attack_eval_size": 512,
+  "learning_rate": 0.001,
+  "seed": 42,
+  "epsilon": 0.03137254901960784,
+  "alpha": 0.00784313725490196,
+  "pgd_steps": 5,
+  "training_mode": "targeted_pgd_at",
+  "adv_weight": 0.5,
+  "device": "cpu"
+}
+epoch 1/2 | train loss: 2.1830 | train acc: 0.1717 | clean test acc: 0.2500 | worst-class acc: 0.0000 | train clean loss: 2.1972 | train adv loss: 2.1689
+epoch 2/2 | train loss: 1.8373 | train acc: 0.2937 | clean test acc: 0.3580 | worst-class acc: 0.1798 | train clean loss: 1.9219 | train adv loss: 1.7528
+最终 clean accuracy: 0.3580
+最终 worst-class accuracy: 0.1798
+FGSM adversarial accuracy: 0.0898
+targeted PGD original accuracy: 0.3691
+targeted PGD target success rate: 0.2852
+指标已保存：experiments\targeted_pgd_adversarial_training_cpu\metrics.json
+模型已保存：experiments\targeted_pgd_adversarial_training_cpu\model.pth
+

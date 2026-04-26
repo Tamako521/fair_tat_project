@@ -1,0 +1,74 @@
+﻿{
+  "config": {
+    "data_dir": "data",
+    "output_dir": "experiments\\stage03_fgsm_adversarial_training_cpu_5k",
+    "epochs": 3,
+    "batch_size": 64,
+    "train_size": 5000,
+    "test_size": 1000,
+    "attack_eval_size": 512,
+    "learning_rate": 0.001,
+    "seed": 42,
+    "epsilon": 0.03137254901960784,
+    "alpha": 0.00784313725490196,
+    "pgd_steps": 5,
+    "training_mode": "fgsm_at",
+    "adv_weight": 0.5,
+    "device": "cpu"
+  },
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 2.2068299194335936,
+      "train_accuracy": 0.2048,
+      "clean_test_loss": 2.0080365505218505,
+      "clean_test_accuracy": 0.253,
+      "worst_class_accuracy": 0.0,
+      "train_clean_loss": 2.1572556455612184,
+      "train_adv_loss": 2.256404168701172
+    },
+    {
+      "epoch": 2,
+      "train_loss": 2.035213984680176,
+      "train_accuracy": 0.3272,
+      "clean_test_loss": 1.7747335348129272,
+      "clean_test_accuracy": 0.356,
+      "worst_class_accuracy": 0.031914893617021274,
+      "train_clean_loss": 1.9036270092010499,
+      "train_adv_loss": 2.1668009601593017
+    },
+    {
+      "epoch": 3,
+      "train_loss": 1.9115704759597778,
+      "train_accuracy": 0.3956,
+      "clean_test_loss": 1.646568696975708,
+      "clean_test_accuracy": 0.406,
+      "worst_class_accuracy": 0.011235955056179775,
+      "train_clean_loss": 1.7140770084381103,
+      "train_adv_loss": 2.1090639389038084
+    }
+  ],
+  "clean_eval": {
+    "loss": 1.646568696975708,
+    "accuracy": 0.406,
+    "worst_class_accuracy": 0.011235955056179775,
+    "class_accuracy": {
+      "0": 0.43023255813953487,
+      "1": 0.47619047619047616,
+      "2": 0.011235955056179775,
+      "3": 0.11650485436893204,
+      "4": 0.11702127659574468,
+      "5": 0.4444444444444444,
+      "6": 0.7319587628865979,
+      "7": 0.5151515151515151,
+      "8": 0.6363636363636364,
+      "9": 0.5166666666666667
+    }
+  },
+  "attack_eval": {
+    "attack_eval_size": 512,
+    "fgsm_adversarial_accuracy": 0.21484375,
+    "targeted_pgd_original_accuracy": 0.294921875,
+    "targeted_pgd_target_success_rate": 0.193359375
+  }
+}

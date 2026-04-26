@@ -1,0 +1,84 @@
+﻿{
+  "config": {
+    "data_dir": "data",
+    "output_dir": "experiments\\stage05_cifar10_baseline_cpu_10k",
+    "epochs": 5,
+    "batch_size": 64,
+    "train_size": 10000,
+    "test_size": 2000,
+    "attack_eval_size": 1000,
+    "learning_rate": 0.001,
+    "seed": 42,
+    "epsilon": 0.03137254901960784,
+    "alpha": 0.00784313725490196,
+    "pgd_steps": 5,
+    "training_mode": "clean",
+    "adv_weight": 0.5,
+    "device": "cpu"
+  },
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 1.877921740913391,
+      "train_accuracy": 0.3139,
+      "clean_test_loss": 1.573268404006958,
+      "clean_test_accuracy": 0.4205,
+      "worst_class_accuracy": 0.09523809523809523
+    },
+    {
+      "epoch": 2,
+      "train_loss": 1.4661161863327026,
+      "train_accuracy": 0.4717,
+      "clean_test_loss": 1.3980299348831178,
+      "clean_test_accuracy": 0.5035,
+      "worst_class_accuracy": 0.2328042328042328
+    },
+    {
+      "epoch": 3,
+      "train_loss": 1.3199483573913575,
+      "train_accuracy": 0.5318,
+      "clean_test_loss": 1.3284570121765136,
+      "clean_test_accuracy": 0.5215,
+      "worst_class_accuracy": 0.2962962962962963
+    },
+    {
+      "epoch": 4,
+      "train_loss": 1.2027799657821656,
+      "train_accuracy": 0.5731,
+      "clean_test_loss": 1.2410987215042115,
+      "clean_test_accuracy": 0.556,
+      "worst_class_accuracy": 0.3544973544973545
+    },
+    {
+      "epoch": 5,
+      "train_loss": 1.1269471227645873,
+      "train_accuracy": 0.6002,
+      "clean_test_loss": 1.20434752035141,
+      "clean_test_accuracy": 0.575,
+      "worst_class_accuracy": 0.3333333333333333
+    }
+  ],
+  "clean_eval": {
+    "loss": 1.20434752035141,
+    "accuracy": 0.575,
+    "worst_class_accuracy": 0.3333333333333333,
+    "class_accuracy": {
+      "0": 0.4350282485875706,
+      "1": 0.7149321266968326,
+      "2": 0.3333333333333333,
+      "3": 0.4375,
+      "4": 0.3711340206185567,
+      "5": 0.5376884422110553,
+      "6": 0.8138297872340425,
+      "7": 0.6363636363636364,
+      "8": 0.8309859154929577,
+      "9": 0.5915492957746479
+    }
+  },
+  "attack_eval": {
+    "attack_eval_size": 1024,
+    "fgsm_adversarial_accuracy": 0.068359375,
+    "targeted_pgd_original_accuracy": 0.205078125,
+    "targeted_pgd_target_success_rate": 0.591796875
+  }
+}

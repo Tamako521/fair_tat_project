@@ -1,0 +1,30 @@
+﻿实验配置：{
+  "data_dir": "data",
+  "output_dir": "experiments\\stage06_fgsm_adversarial_training_cpu_10k",
+  "epochs": 5,
+  "batch_size": 64,
+  "train_size": 10000,
+  "test_size": 2000,
+  "attack_eval_size": 1000,
+  "learning_rate": 0.001,
+  "seed": 42,
+  "epsilon": 0.03137254901960784,
+  "alpha": 0.00784313725490196,
+  "pgd_steps": 5,
+  "training_mode": "fgsm_at",
+  "adv_weight": 0.5,
+  "device": "cpu"
+}
+epoch 1/5 | train loss: 2.1034 | train acc: 0.2850 | clean test acc: 0.3860 | worst-class acc: 0.1111 | train clean loss: 1.9997 | train adv loss: 2.2072
+epoch 2/5 | train loss: 1.8670 | train acc: 0.4158 | clean test acc: 0.4345 | worst-class acc: 0.0577 | train clean loss: 1.6507 | train adv loss: 2.0833
+epoch 3/5 | train loss: 1.7734 | train acc: 0.4705 | clean test acc: 0.4670 | worst-class acc: 0.1443 | train clean loss: 1.5170 | train adv loss: 2.0298
+epoch 4/5 | train loss: 1.7162 | train acc: 0.4987 | clean test acc: 0.4730 | worst-class acc: 0.0952 | train clean loss: 1.4376 | train adv loss: 1.9948
+epoch 5/5 | train loss: 1.6795 | train acc: 0.5206 | clean test acc: 0.5120 | worst-class acc: 0.2646 | train clean loss: 1.3820 | train adv loss: 1.9769
+最终 clean accuracy: 0.5120
+最终 worst-class accuracy: 0.2646
+FGSM adversarial accuracy: 0.2246
+targeted PGD original accuracy: 0.3945
+targeted PGD target success rate: 0.2119
+指标已保存：experiments\fgsm_adversarial_training_cpu_10k\metrics.json
+模型已保存：experiments\fgsm_adversarial_training_cpu_10k\model.pth
+
