@@ -1,0 +1,34 @@
+实验配置：{
+  "data_dir": "data",
+  "output_dir": "week2\\experiments\\stage07b_pgd7_full",
+  "epochs": 6,
+  "batch_size": 64,
+  "train_size": 0,
+  "test_size": 5000,
+  "attack_eval_size": 2048,
+  "learning_rate": 0.001,
+  "seed": 42,
+  "num_classes": 10,
+  "epsilon": 0.03137254901960784,
+  "alpha": 0.00784313725490196,
+  "pgd_steps": 7,
+  "adv_weight": 0.5,
+  "warmup_epochs": 1,
+  "prior_smoothing": 5.0,
+  "device": "cpu"
+}
+epoch 1/6 | mode: clean_warmup | train loss: 1.4720 | train acc: 0.4682 | clean acc: 0.5854 | clean worst-class acc: 0.3582 | target prior: [0.085728, 0.114461, 0.080075, 0.129063, 0.090438, 0.07301, 0.120584, 0.110221, 0.138012, 0.058408]
+epoch 2/6 | mode: fair_tat_like | train loss: 1.4191 | train acc: 0.5761 | clean acc: 0.6058 | clean worst-class acc: 0.3260 | target prior: [0.077684, 0.082632, 0.104404, 0.122712, 0.044532, 0.08758, 0.161306, 0.132113, 0.084612, 0.102425] | adv loss: 1.6399
+epoch 3/6 | mode: fair_tat_like | train loss: 1.3033 | train acc: 0.6171 | clean acc: 0.6198 | clean worst-class acc: 0.3913 | target prior: [0.033829, 0.085085, 0.086622, 0.138391, 0.1102, 0.086622, 0.232701, 0.062532, 0.103024, 0.060994] | adv loss: 1.5171
+epoch 4/6 | mode: fair_tat_like | train loss: 1.2359 | train acc: 0.6468 | clean acc: 0.6400 | clean worst-class acc: 0.4490 | target prior: [0.062703, 0.081622, 0.18973, 0.196757, 0.181081, 0.071351, 0.041081, 0.057838, 0.076757, 0.041081] | adv loss: 1.4572
+epoch 5/6 | mode: fair_tat_like | train loss: 1.1823 | train acc: 0.6642 | clean acc: 0.6292 | clean worst-class acc: 0.1623 | target prior: [0.094013, 0.087185, 0.085609, 0.03729, 0.030987, 0.140756, 0.213235, 0.102416, 0.107143, 0.101366] | adv loss: 1.4085
+epoch 6/6 | mode: fair_tat_like | train loss: 1.1522 | train acc: 0.6867 | clean acc: 0.6656 | clean worst-class acc: 0.4686 | target prior: [0.108595, 0.079559, 0.151568, 0.181765, 0.112079, 0.062137, 0.100465, 0.066202, 0.08885, 0.04878] | adv loss: 1.3995
+最终 clean accuracy: 0.6656
+最终 clean worst-class accuracy: 0.4686
+FGSM robust accuracy: 0.1919
+FGSM worst-class robust accuracy: 0.0650
+targeted PGD original accuracy: 0.4624
+targeted PGD worst-class robust accuracy: 0.2573
+targeted PGD target success rate: 0.3555
+指标已保存：week2\experiments\stage07b_pgd7_full\metrics.json
+模型已保存：week2\experiments\stage07b_pgd7_full\model.pth

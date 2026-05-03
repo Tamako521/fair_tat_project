@@ -1,0 +1,34 @@
+实验配置：{
+  "data_dir": "data",
+  "output_dir": "week2\\experiments\\stage08a_adv07_smoothing10_full",
+  "epochs": 6,
+  "batch_size": 64,
+  "train_size": 0,
+  "test_size": 5000,
+  "attack_eval_size": 2048,
+  "learning_rate": 0.001,
+  "seed": 42,
+  "num_classes": 10,
+  "epsilon": 0.03137254901960784,
+  "alpha": 0.00784313725490196,
+  "pgd_steps": 5,
+  "adv_weight": 0.7,
+  "warmup_epochs": 1,
+  "prior_smoothing": 10.0,
+  "device": "cpu"
+}
+epoch 1/6 | mode: clean_warmup | train loss: 1.4720 | train acc: 0.4682 | clean acc: 0.5854 | clean worst-class acc: 0.3582 | target prior: [0.086056, 0.114128, 0.080534, 0.128394, 0.090658, 0.073631, 0.12011, 0.109986, 0.137138, 0.059365]
+epoch 2/6 | mode: fair_tat_like | train loss: 1.4830 | train acc: 0.5670 | clean acc: 0.5954 | clean worst-class acc: 0.3219 | target prior: [0.079133, 0.092793, 0.084315, 0.108337, 0.044748, 0.103627, 0.157325, 0.138012, 0.090438, 0.101272] | adv loss: 1.5934
+epoch 3/6 | mode: fair_tat_like | train loss: 1.3669 | train acc: 0.6050 | clean acc: 0.6044 | clean worst-class acc: 0.3872 | target prior: [0.036574, 0.098171, 0.096728, 0.143407, 0.116458, 0.087103, 0.215111, 0.05871, 0.097209, 0.050529] | adv loss: 1.4715
+epoch 4/6 | mode: fair_tat_like | train loss: 1.3008 | train acc: 0.6320 | clean acc: 0.6280 | clean worst-class acc: 0.4490 | target prior: [0.065816, 0.092857, 0.166327, 0.191327, 0.181633, 0.069898, 0.045408, 0.061735, 0.080102, 0.044898] | adv loss: 1.4072
+epoch 5/6 | mode: fair_tat_like | train loss: 1.2528 | train acc: 0.6456 | clean acc: 0.6158 | clean worst-class acc: 0.1542 | target prior: [0.091539, 0.064819, 0.083127, 0.033647, 0.029193, 0.13805, 0.208808, 0.113805, 0.11331, 0.123701] | adv loss: 1.3618
+epoch 6/6 | mode: fair_tat_like | train loss: 1.2218 | train acc: 0.6689 | clean acc: 0.6558 | clean worst-class acc: 0.4686 | target prior: [0.096101, 0.080725, 0.140582, 0.172982, 0.135091, 0.069742, 0.098298, 0.062054, 0.08402, 0.060406] | adv loss: 1.3406
+最终 clean accuracy: 0.6558
+最终 clean worst-class accuracy: 0.4686
+FGSM robust accuracy: 0.2090
+FGSM worst-class robust accuracy: 0.0806
+targeted PGD original accuracy: 0.4761
+targeted PGD worst-class robust accuracy: 0.2961
+targeted PGD target success rate: 0.3184
+指标已保存：week2\experiments\stage08a_adv07_smoothing10_full\metrics.json
+模型已保存：week2\experiments\stage08a_adv07_smoothing10_full\model.pth
