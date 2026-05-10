@@ -1,6 +1,11 @@
 import torch
 
-from src.attacks import fgsm_attack, targeted_pgd_attack
+from src.attacks import (
+    fgsm_attack,
+    multi_step_fgsm_attack,
+    targeted_pgd_attack,
+    untargeted_pgd_attack,
+)
 from src.target_selection import sample_target_labels
 
 
@@ -57,11 +62,17 @@ def evaluate_clean(model, dataloader, criterion, device, num_classes):
 def evaluate_robustness(model, dataloader, criterion, device, args, target_prior):
     model.eval()
     num_classes = args.num_classes
+    eval_pgd_steps = getattr(args, "eval_pgd_steps", args.pgd_steps)
+    eval_ifgsm_steps = getattr(args, "eval_ifgsm_steps", max(1, args.pgd_steps))
     total_seen = 0
     fgsm_correct = 0
+    ifgsm_correct = 0
+    pgd_correct = 0
     targeted_correct = 0
     targeted_success = 0
     fgsm_class_correct = [0 for _ in range(num_classes)]
+    ifgsm_class_correct = [0 for _ in range(num_classes)]
+    pgd_class_correct = [0 for _ in range(num_classes)]
     targeted_class_correct = [0 for _ in range(num_classes)]
     target_success_class = [0 for _ in range(num_classes)]
     class_seen = [0 for _ in range(num_classes)]
@@ -75,6 +86,25 @@ def evaluate_robustness(model, dataloader, criterion, device, args, target_prior
         target_labels = sample_target_labels(labels, target_prior, num_classes)
 
         fgsm_images = fgsm_attack(model, images, labels, criterion, args.epsilon)
+        ifgsm_images = multi_step_fgsm_attack(
+            model,
+            images,
+            labels,
+            criterion,
+            args.epsilon,
+            args.alpha,
+            eval_ifgsm_steps,
+        )
+        pgd_images = untargeted_pgd_attack(
+            model,
+            images,
+            labels,
+            criterion,
+            args.epsilon,
+            args.alpha,
+            eval_pgd_steps,
+            random_start=True,
+        )
         targeted_images = targeted_pgd_attack(
             model,
             images,
@@ -87,9 +117,13 @@ def evaluate_robustness(model, dataloader, criterion, device, args, target_prior
 
         with torch.no_grad():
             fgsm_preds = model(fgsm_images).argmax(dim=1)
+            ifgsm_preds = model(ifgsm_images).argmax(dim=1)
+            pgd_preds = model(pgd_images).argmax(dim=1)
             targeted_preds = model(targeted_images).argmax(dim=1)
 
         fgsm_correct += (fgsm_preds == labels).sum().item()
+        ifgsm_correct += (ifgsm_preds == labels).sum().item()
+        pgd_correct += (pgd_preds == labels).sum().item()
         targeted_correct += (targeted_preds == labels).sum().item()
         targeted_success += (targeted_preds == target_labels).sum().item()
 
@@ -98,6 +132,8 @@ def evaluate_robustness(model, dataloader, criterion, device, args, target_prior
             count = mask.sum().item()
             class_seen[cls] += count
             fgsm_class_correct[cls] += ((fgsm_preds == labels) & mask).sum().item()
+            ifgsm_class_correct[cls] += ((ifgsm_preds == labels) & mask).sum().item()
+            pgd_class_correct[cls] += ((pgd_preds == labels) & mask).sum().item()
             targeted_class_correct[cls] += ((targeted_preds == labels) & mask).sum().item()
             target_success_class[cls] += ((targeted_preds == target_labels) & mask).sum().item()
 
@@ -105,9 +141,17 @@ def evaluate_robustness(model, dataloader, criterion, device, args, target_prior
 
     return {
         "attack_eval_size": total_seen,
+        "eval_ifgsm_steps": eval_ifgsm_steps,
+        "eval_pgd_steps": eval_pgd_steps,
         "fgsm_adversarial_accuracy": fgsm_correct / total_seen,
         "fgsm_worst_class_accuracy": _worst_rate(fgsm_class_correct, class_seen),
         "fgsm_class_accuracy": _rate_dict(fgsm_class_correct, class_seen),
+        "ifgsm_adversarial_accuracy": ifgsm_correct / total_seen,
+        "ifgsm_worst_class_accuracy": _worst_rate(ifgsm_class_correct, class_seen),
+        "ifgsm_class_accuracy": _rate_dict(ifgsm_class_correct, class_seen),
+        "untargeted_pgd_adversarial_accuracy": pgd_correct / total_seen,
+        "untargeted_pgd_worst_class_accuracy": _worst_rate(pgd_class_correct, class_seen),
+        "untargeted_pgd_class_accuracy": _rate_dict(pgd_class_correct, class_seen),
         "targeted_pgd_original_accuracy": targeted_correct / total_seen,
         "targeted_pgd_worst_class_accuracy": _worst_rate(targeted_class_correct, class_seen),
         "targeted_pgd_original_class_accuracy": _rate_dict(targeted_class_correct, class_seen),

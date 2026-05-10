@@ -1,0 +1,41 @@
+实验配置：{
+  "data_dir": "data",
+  "output_dir": "week3\\experiments\\stage03_best_seed123_full_strong_eval",
+  "epochs": 6,
+  "batch_size": 64,
+  "train_size": 0,
+  "test_size": 5000,
+  "attack_eval_size": 2048,
+  "learning_rate": 0.001,
+  "model": "small_cnn",
+  "seed": 123,
+  "num_classes": 10,
+  "epsilon": 0.03137254901960784,
+  "alpha": 0.00784313725490196,
+  "pgd_steps": 5,
+  "eval_pgd_steps": 10,
+  "eval_ifgsm_steps": 5,
+  "adv_weight": 0.7,
+  "warmup_epochs": 1,
+  "prior_smoothing": 10.0,
+  "device": "cpu"
+}
+epoch 1/6 | mode: clean_warmup | train loss: 1.4822 | train acc: 0.4667 | clean acc: 0.5808 | clean worst-class acc: 0.3425 | target prior: [0.144809, 0.103825, 0.074681, 0.093352, 0.087432, 0.183515, 0.045082, 0.107924, 0.092441, 0.06694]
+epoch 2/6 | mode: fair_tat_like | train loss: 1.4727 | train acc: 0.5658 | clean acc: 0.5842 | clean worst-class acc: 0.3347 | target prior: [0.104176, 0.071592, 0.087655, 0.157871, 0.044516, 0.074805, 0.163378, 0.058284, 0.120239, 0.117485] | adv loss: 1.5790
+epoch 3/6 | mode: fair_tat_like | train loss: 1.3642 | train acc: 0.6049 | clean acc: 0.6320 | clean worst-class acc: 0.3170 | target prior: [0.07732, 0.067526, 0.110309, 0.079897, 0.128351, 0.135567, 0.062887, 0.152577, 0.096907, 0.08866] | adv loss: 1.4694
+epoch 4/6 | mode: fair_tat_like | train loss: 1.2985 | train acc: 0.6322 | clean acc: 0.6220 | clean worst-class acc: 0.4129 | target prior: [0.090452, 0.068342, 0.118593, 0.137688, 0.075377, 0.125126, 0.143216, 0.037186, 0.11407, 0.08995] | adv loss: 1.4083
+epoch 5/6 | mode: fair_tat_like | train loss: 1.2491 | train acc: 0.6528 | clean acc: 0.6438 | clean worst-class acc: 0.3836 | target prior: [0.054758, 0.065391, 0.091972, 0.105263, 0.121744, 0.116959, 0.068581, 0.157895, 0.104732, 0.112706] | adv loss: 1.3619
+epoch 6/6 | mode: fair_tat_like | train loss: 1.2176 | train acc: 0.6715 | clean acc: 0.6480 | clean worst-class acc: 0.3464 | target prior: [0.076344, 0.076344, 0.12043, 0.090323, 0.086559, 0.096237, 0.103763, 0.109677, 0.143011, 0.097312] | adv loss: 1.3363
+最终 clean accuracy: 0.6480
+最终 clean worst-class accuracy: 0.3464
+FGSM robust accuracy: 0.2461
+FGSM worst-class robust accuracy: 0.0556
+multi-step FGSM robust accuracy: 0.1997
+multi-step FGSM worst-class robust accuracy: 0.0297
+untargeted PGD robust accuracy: 0.1826
+untargeted PGD worst-class robust accuracy: 0.0297
+targeted PGD original accuracy: 0.4956
+targeted PGD worst-class robust accuracy: 0.2374
+targeted PGD target success rate: 0.2983
+指标已保存：week3\experiments\stage03_best_seed123_full_strong_eval\metrics.json
+模型已保存：week3\experiments\stage03_best_seed123_full_strong_eval\model.pth

@@ -72,8 +72,7 @@
 5. 开始调研 ISIC 2019 数据集，整理疾病标签、年龄、性别、解剖部位等属性，并设计医疗图像公平性评测方案。
 
 ## 七、材料位置
-
-本周材料已整理到 `week2/` 目录：
+实验材料已整理到[项目](https://github.com/Tamako521/fair_tat_project.git)目录中：
 
 - FAIR-TAT-like 方法说明：`week2/docs/fair_tat_like_cifar10_notes.md`
 - 阶段实验结果总表：`week2/docs/fair_tat_like_stage02_results.md`

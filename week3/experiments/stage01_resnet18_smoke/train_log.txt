@@ -1,0 +1,36 @@
+实验配置：{
+  "data_dir": "data",
+  "output_dir": "week3\\experiments\\stage01_resnet18_smoke",
+  "epochs": 1,
+  "batch_size": 32,
+  "train_size": 128,
+  "test_size": 64,
+  "attack_eval_size": 32,
+  "learning_rate": 0.001,
+  "model": "resnet18",
+  "seed": 42,
+  "num_classes": 10,
+  "epsilon": 0.03137254901960784,
+  "alpha": 0.00784313725490196,
+  "pgd_steps": 2,
+  "eval_pgd_steps": 2,
+  "eval_ifgsm_steps": 2,
+  "adv_weight": 0.7,
+  "warmup_epochs": 0,
+  "prior_smoothing": 10.0,
+  "device": "cpu"
+}
+epoch 1/1 | mode: fair_tat_like | train loss: 2.4191 | train acc: 0.1641 | clean acc: 0.2188 | clean worst-class acc: 0.0000 | target prior: [0.226667, 0.126667, 0.153333, 0.066667, 0.066667, 0.066667, 0.066667, 0.066667, 0.08, 0.08] | adv loss: 2.4182
+最终 clean accuracy: 0.2188
+最终 clean worst-class accuracy: 0.0000
+FGSM robust accuracy: 0.0000
+FGSM worst-class robust accuracy: 0.0000
+multi-step FGSM robust accuracy: 0.0000
+multi-step FGSM worst-class robust accuracy: 0.0000
+untargeted PGD robust accuracy: 0.0000
+untargeted PGD worst-class robust accuracy: 0.0000
+targeted PGD original accuracy: 0.1250
+targeted PGD worst-class robust accuracy: 0.0000
+targeted PGD target success rate: 0.5000
+指标已保存：week3\experiments\stage01_resnet18_smoke\metrics.json
+模型已保存：week3\experiments\stage01_resnet18_smoke\model.pth

@@ -111,12 +111,6 @@ def main():
             epoch_metrics["train_adv_loss"] = train_metrics["adv_loss"]
 
         history.append(epoch_metrics)
-        latest_checkpoint_path = output_dir / "model_latest.pth"
-        latest_history_path = output_dir / "history_latest.json"
-        torch.save(model.state_dict(), latest_checkpoint_path)
-        with latest_history_path.open("w", encoding="utf-8") as f:
-            json.dump(history, f, ensure_ascii=False, indent=2)
-
         message = (
             f"epoch {epoch}/{args.epochs} | mode: {mode} | "
             f"train loss: {epoch_metrics['train_loss']:.4f} | "

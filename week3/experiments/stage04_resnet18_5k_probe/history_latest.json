@@ -1,0 +1,44 @@
+[
+  {
+    "epoch": 1,
+    "mode": "clean_warmup",
+    "train_loss": 1.8430749210357666,
+    "train_accuracy": 0.3242,
+    "clean_test_accuracy": 0.365,
+    "clean_worst_class_accuracy": 0.041237113402061855,
+    "target_prior": [
+      0.077551,
+      0.029932,
+      0.043537,
+      0.214966,
+      0.155102,
+      0.091156,
+      0.013605,
+      0.104762,
+      0.213605,
+      0.055782
+    ]
+  },
+  {
+    "epoch": 2,
+    "mode": "fair_tat_like",
+    "train_loss": 1.6567332515716553,
+    "train_accuracy": 0.4322,
+    "clean_test_accuracy": 0.447,
+    "clean_worst_class_accuracy": 0.0898876404494382,
+    "target_prior": [
+      0.033691,
+      0.140888,
+      0.070444,
+      0.047473,
+      0.056662,
+      0.202144,
+      0.116386,
+      0.130168,
+      0.096478,
+      0.105666
+    ],
+    "train_clean_loss": 1.5482977249145509,
+    "train_adv_loss": 1.703205632019043
+  }
+]
