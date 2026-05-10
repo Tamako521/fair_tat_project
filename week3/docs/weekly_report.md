@@ -61,7 +61,7 @@
 5. 准备将 CIFAR-10 的 class-wise fairness 评测迁移到医疗图像属性分组评测。
 
 ## 七、材料位置
-
+实验材料已整理到[项目](https://github.com/Tamako521/fair_tat_project.git)目录中：
 - FAIR-TAT 对齐笔记：`week3/docs/fair_tat_alignment_notes.md`
 - ISIC 2019 调研笔记：`week3/docs/isic2019_fairness_notes.md`
 - 当前结果总表：`week3/docs/week3_current_results.md`
