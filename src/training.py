@@ -1,6 +1,7 @@
 from src.attacks import targeted_pgd_attack
 from src.target_selection import sample_target_labels
 from src.utils import accuracy_from_logits
+import torch.nn.functional as F
 
 
 def train_one_epoch_clean(model, trainloader, criterion, optimizer, device):
@@ -31,7 +32,16 @@ def train_one_epoch_clean(model, trainloader, criterion, optimizer, device):
     }
 
 
-def train_one_epoch_fair_tat_like(model, trainloader, criterion, optimizer, device, args, target_prior):
+def train_one_epoch_fair_tat_like(
+    model,
+    trainloader,
+    criterion,
+    optimizer,
+    device,
+    args,
+    target_prior,
+    class_loss_weights=None,
+):
     model.train()
     total_loss = 0.0
     total_clean_loss = 0.0
@@ -58,7 +68,12 @@ def train_one_epoch_fair_tat_like(model, trainloader, criterion, optimizer, devi
         clean_outputs = model(images)
         adv_outputs = model(targeted_images)
         clean_loss = criterion(clean_outputs, labels)
-        adv_loss = criterion(adv_outputs, labels)
+        if class_loss_weights is None:
+            adv_loss = criterion(adv_outputs, labels)
+        else:
+            per_sample_adv_loss = F.cross_entropy(adv_outputs, labels, reduction="none")
+            sample_weights = class_loss_weights.to(labels.device)[labels]
+            adv_loss = (per_sample_adv_loss * sample_weights).mean()
         loss = (1 - args.adv_weight) * clean_loss + args.adv_weight * adv_loss
 
         optimizer.zero_grad()

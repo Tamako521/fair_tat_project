@@ -1,0 +1,44 @@
+实验配置：{
+  "data_dir": "data",
+  "output_dir": "week4\\experiments\\stage00_per_class_smoke",
+  "epochs": 2,
+  "batch_size": 32,
+  "train_size": 256,
+  "test_size": 128,
+  "attack_eval_size": 64,
+  "learning_rate": 0.001,
+  "model": "small_cnn",
+  "seed": 42,
+  "num_classes": 10,
+  "epsilon": 0.03137254901960784,
+  "alpha": 0.00784313725490196,
+  "pgd_steps": 2,
+  "eval_pgd_steps": 2,
+  "eval_ifgsm_steps": 2,
+  "adv_weight": 0.7,
+  "warmup_epochs": 1,
+  "prior_smoothing": 10.0,
+  "prior_mode": "blended",
+  "deficit_source": "targeted_pgd",
+  "deficit_smoothing": 1.0,
+  "deficit_weight": 0.5,
+  "prior_eval_size": 64,
+  "loss_weight_mode": "robust_deficit",
+  "loss_weight_strength": 1.0,
+  "device": "cpu"
+}
+epoch 1/2 | mode: clean_warmup | train loss: 2.3065 | train acc: 0.0820 | clean acc: 0.0781 | clean worst-class acc: 0.0000 | target prior: [0.084742, 0.075567, 0.075567, 0.075567, 0.075567, 0.075567, 0.075567, 0.310719, 0.075567, 0.075567] | class weights: [1.052632, 1.052632, 1.052632, 1.052632, 1.052632, 1.052632, 1.052632, 0.526316, 1.052632, 1.052632]
+epoch 2/2 | mode: fair_tat_like | train loss: 2.2442 | train acc: 0.1758 | clean acc: 0.1094 | clean worst-class acc: 0.0000 | target prior: [0.075996, 0.075996, 0.075996, 0.075996, 0.075996, 0.075996, 0.078333, 0.078333, 0.311363, 0.075996] | class weights: [1.052632, 1.052632, 1.052632, 1.052632, 1.052632, 1.052632, 1.052632, 1.052632, 0.526316, 1.052632] | adv loss: 2.2354
+最终 clean accuracy: 0.1094
+最终 clean worst-class accuracy: 0.0000
+FGSM robust accuracy: 0.1094
+FGSM worst-class robust accuracy: 0.0000
+multi-step FGSM robust accuracy: 0.1094
+multi-step FGSM worst-class robust accuracy: 0.0000
+untargeted PGD robust accuracy: 0.1094
+untargeted PGD worst-class robust accuracy: 0.0000
+targeted PGD original accuracy: 0.1094
+targeted PGD worst-class robust accuracy: 0.0000
+targeted PGD target success rate: 0.2969
+指标已保存：week4\experiments\stage00_per_class_smoke\metrics.json
+模型已保存：week4\experiments\stage00_per_class_smoke\model.pth
