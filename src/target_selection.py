@@ -51,14 +51,12 @@ def class_weights_from_accuracy(class_accuracy, num_classes, device, strength=1.
 
 
 def sample_target_labels(labels, prior, num_classes):
-    targets = []
-    for label in labels.detach().cpu().tolist():
-        probs = prior.detach().clone()
-        probs[label] = 0.0
-        if probs.sum() <= 0:
-            probs = torch.ones(num_classes, device=prior.device)
-            probs[label] = 0.0
-        probs = probs / probs.sum()
-        sampled = torch.multinomial(probs, num_samples=1).item()
-        targets.append(sampled)
-    return torch.tensor(targets, dtype=labels.dtype, device=labels.device)
+    batch_size = labels.size(0)
+    probs = prior.detach().to(labels.device).unsqueeze(0).expand(batch_size, -1).clone()
+    probs.scatter_(1, labels.view(-1, 1), 0.0)
+    row_sums = probs.sum(dim=1, keepdim=True)
+    fallback = torch.ones_like(probs)
+    fallback.scatter_(1, labels.view(-1, 1), 0.0)
+    probs = torch.where(row_sums > 0, probs, fallback)
+    probs = probs / probs.sum(dim=1, keepdim=True).clamp_min(1e-12)
+    return torch.multinomial(probs, num_samples=1).squeeze(1).to(dtype=labels.dtype)

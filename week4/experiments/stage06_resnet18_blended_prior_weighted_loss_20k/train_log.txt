@@ -1,0 +1,46 @@
+实验配置：{
+  "data_dir": "data",
+  "output_dir": "week4/experiments/stage06_resnet18_blended_prior_weighted_loss_20k",
+  "epochs": 4,
+  "batch_size": 64,
+  "train_size": 20000,
+  "test_size": 3000,
+  "attack_eval_size": 1024,
+  "learning_rate": 0.001,
+  "model": "resnet18",
+  "seed": 42,
+  "num_classes": 10,
+  "epsilon": 0.03137254901960784,
+  "alpha": 0.00784313725490196,
+  "pgd_steps": 3,
+  "eval_pgd_steps": 5,
+  "eval_ifgsm_steps": 3,
+  "adv_weight": 0.7,
+  "warmup_epochs": 1,
+  "prior_smoothing": 10.0,
+  "prior_mode": "blended",
+  "deficit_source": "targeted_pgd",
+  "deficit_smoothing": 1.0,
+  "deficit_weight": 0.5,
+  "prior_eval_size": 512,
+  "loss_weight_mode": "robust_deficit",
+  "loss_weight_strength": 1.0,
+  "device": "cuda"
+}
+epoch 1/4 | mode: clean_warmup | train loss: 1.5012 | train acc: 0.4451 | clean acc: 0.5210 | clean worst-class acc: 0.2391 | target prior: [0.079929, 0.072845, 0.086, 0.098993, 0.212544, 0.105818, 0.062033, 0.116688, 0.091448, 0.073702] | class weights: [1.01953, 1.066525, 1.049869, 1.095025, 0.815624, 1.04284, 0.993425, 0.986974, 0.91158, 1.018608]
+epoch 2/4 | mode: fair_tat_like | train loss: 1.3568 | train acc: 0.5786 | clean acc: 0.5853 | clean worst-class acc: 0.0782 | target prior: [0.071263, 0.099607, 0.122251, 0.071754, 0.118449, 0.116003, 0.09184, 0.104585, 0.117479, 0.086768] | class weights: [1.038363, 0.838861, 1.120617, 1.263952, 0.955294, 1.003097, 1.159708, 0.908673, 0.816845, 0.894589] | adv loss: 1.4391
+epoch 3/4 | mode: fair_tat_like | train loss: 1.2146 | train acc: 0.6425 | clean acc: 0.6217 | clean worst-class acc: 0.2034 | target prior: [0.094284, 0.094109, 0.110252, 0.126246, 0.101505, 0.071876, 0.143651, 0.126069, 0.064552, 0.067456] | class weights: [0.873534, 0.861942, 1.03095, 1.1484, 1.026056, 1.243197, 0.9135, 0.910038, 0.942862, 1.049521] | adv loss: 1.3098
+epoch 4/4 | mode: fair_tat_like | train loss: 1.0783 | train acc: 0.7031 | clean acc: 0.6417 | clean worst-class acc: 0.4306 | target prior: [0.068945, 0.090893, 0.089956, 0.152821, 0.089236, 0.096373, 0.071897, 0.072199, 0.191466, 0.076213] | class weights: [1.004442, 0.847654, 1.109767, 1.013861, 1.120899, 1.067889, 1.054963, 1.069503, 0.756971, 0.954052] | adv loss: 1.1787
+最终 clean accuracy: 0.6417
+最终 clean worst-class accuracy: 0.4306
+FGSM robust accuracy: 0.2188
+FGSM worst-class robust accuracy: 0.0889
+multi-step FGSM robust accuracy: 0.2725
+multi-step FGSM worst-class robust accuracy: 0.1222
+untargeted PGD robust accuracy: 0.2227
+untargeted PGD worst-class robust accuracy: 0.0889
+targeted PGD original accuracy: 0.5234
+targeted PGD worst-class robust accuracy: 0.3364
+targeted PGD target success rate: 0.2529
+指标已保存：week4/experiments/stage06_resnet18_blended_prior_weighted_loss_20k/metrics.json
+模型已保存：week4/experiments/stage06_resnet18_blended_prior_weighted_loss_20k/model.pth

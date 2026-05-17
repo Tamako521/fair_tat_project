@@ -50,7 +50,15 @@ def evaluate_prior_source(model, testloader, criterion, device, args, target_pri
 
     original_attack_eval_size = args.attack_eval_size
     args.attack_eval_size = args.prior_eval_size
-    robust_metrics = evaluate_robustness(model, testloader, criterion, device, args, target_prior)
+    robust_metrics = evaluate_robustness(
+        model,
+        testloader,
+        criterion,
+        device,
+        args,
+        target_prior,
+        use_amp=args.amp,
+    )
     args.attack_eval_size = original_attack_eval_size
     return robust_metrics
 
@@ -97,6 +105,9 @@ def parse_args():
     parser.add_argument("--train-size", type=int, default=1000)
     parser.add_argument("--test-size", type=int, default=400)
     parser.add_argument("--attack-eval-size", type=int, default=256)
+    parser.add_argument("--num-workers", type=int, default=0)
+    parser.add_argument("--pin-memory", action="store_true")
+    parser.add_argument("--amp", action="store_true")
     parser.add_argument("--learning-rate", type=float, default=0.001)
     parser.add_argument("--model", type=str, default="small_cnn", choices=["small_cnn", "resnet18"])
     parser.add_argument("--seed", type=int, default=42)
@@ -145,17 +156,24 @@ def main():
         log_path.unlink()
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if device.type == "cuda":
+        torch.backends.cudnn.benchmark = True
+    use_amp = args.amp and device.type == "cuda"
+
     trainloader, testloader = build_cifar10_loaders(
         args.data_dir,
         args.train_size,
         args.test_size,
         args.batch_size,
         args.seed,
+        args.num_workers,
+        args.pin_memory,
     )
 
     model = build_model(args.model, num_classes=args.num_classes).to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
+    scaler = torch.cuda.amp.GradScaler(enabled=use_amp)
     target_prior = uniform_prior(args.num_classes, device)
     class_loss_weights = None
 
@@ -166,7 +184,15 @@ def main():
     history = []
     for epoch in range(1, args.epochs + 1):
         if epoch <= args.warmup_epochs:
-            train_metrics = train_one_epoch_clean(model, trainloader, criterion, optimizer, device)
+            train_metrics = train_one_epoch_clean(
+                model,
+                trainloader,
+                criterion,
+                optimizer,
+                device,
+                use_amp=use_amp,
+                scaler=scaler,
+            )
             mode = "clean_warmup"
         else:
             train_metrics = train_one_epoch_fair_tat_like(
@@ -178,10 +204,12 @@ def main():
                 args,
                 target_prior,
                 class_loss_weights=class_loss_weights,
+                use_amp=use_amp,
+                scaler=scaler,
             )
             mode = "fair_tat_like"
 
-        clean_metrics = evaluate_clean(model, testloader, criterion, device, args.num_classes)
+        clean_metrics = evaluate_clean(model, testloader, criterion, device, args.num_classes, use_amp=use_amp)
         deficit_metrics = evaluate_prior_source(model, testloader, criterion, device, args, target_prior)
         target_prior, deficit_prior, prior_class_accuracy = update_target_prior(
             clean_metrics,
@@ -237,8 +265,8 @@ def main():
             message += f" | adv loss: {epoch_metrics['train_adv_loss']:.4f}"
         write_log(log_path, message)
 
-    clean_metrics = evaluate_clean(model, testloader, criterion, device, args.num_classes)
-    robust_metrics = evaluate_robustness(model, testloader, criterion, device, args, target_prior)
+    clean_metrics = evaluate_clean(model, testloader, criterion, device, args.num_classes, use_amp=use_amp)
+    robust_metrics = evaluate_robustness(model, testloader, criterion, device, args, target_prior, use_amp=use_amp)
     metrics = {
         "config": config,
         "history": history,

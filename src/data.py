@@ -12,7 +12,7 @@ def build_subset(dataset, size, seed):
     return Subset(dataset, indices)
 
 
-def build_cifar10_loaders(data_dir, train_size, test_size, batch_size, seed):
+def build_cifar10_loaders(data_dir, train_size, test_size, batch_size, seed, num_workers=0, pin_memory=False):
     transform = transforms.Compose([transforms.ToTensor()])
     trainset = torchvision.datasets.CIFAR10(
         root=data_dir,
@@ -28,6 +28,21 @@ def build_cifar10_loaders(data_dir, train_size, test_size, batch_size, seed):
     )
     train_subset = build_subset(trainset, train_size, seed)
     test_subset = build_subset(testset, test_size, seed + 1)
-    trainloader = DataLoader(train_subset, batch_size=batch_size, shuffle=True, num_workers=0)
-    testloader = DataLoader(test_subset, batch_size=batch_size, shuffle=False, num_workers=0)
+    persistent_workers = num_workers > 0
+    trainloader = DataLoader(
+        train_subset,
+        batch_size=batch_size,
+        shuffle=True,
+        num_workers=num_workers,
+        pin_memory=pin_memory,
+        persistent_workers=persistent_workers,
+    )
+    testloader = DataLoader(
+        test_subset,
+        batch_size=batch_size,
+        shuffle=False,
+        num_workers=num_workers,
+        pin_memory=pin_memory,
+        persistent_workers=persistent_workers,
+    )
     return trainloader, testloader

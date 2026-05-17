@@ -2,24 +2,38 @@ from src.attacks import targeted_pgd_attack
 from src.target_selection import sample_target_labels
 from src.utils import accuracy_from_logits
 import torch.nn.functional as F
+import torch
+from contextlib import nullcontext
 
 
-def train_one_epoch_clean(model, trainloader, criterion, optimizer, device):
+def _autocast(enabled):
+    if enabled and torch.cuda.is_available():
+        return torch.cuda.amp.autocast()
+    return nullcontext()
+
+
+def train_one_epoch_clean(model, trainloader, criterion, optimizer, device, use_amp=False, scaler=None):
     model.train()
     total_loss = 0.0
     total_correct = 0
     total_seen = 0
 
     for images, labels in trainloader:
-        images = images.to(device)
-        labels = labels.to(device)
+        images = images.to(device, non_blocking=True)
+        labels = labels.to(device, non_blocking=True)
 
-        outputs = model(images)
-        loss = criterion(outputs, labels)
+        with _autocast(use_amp):
+            outputs = model(images)
+            loss = criterion(outputs, labels)
 
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+        optimizer.zero_grad(set_to_none=True)
+        if scaler is not None and use_amp:
+            scaler.scale(loss).backward()
+            scaler.step(optimizer)
+            scaler.update()
+        else:
+            loss.backward()
+            optimizer.step()
 
         correct, seen = accuracy_from_logits(outputs, labels)
         total_loss += loss.item() * seen
@@ -41,6 +55,8 @@ def train_one_epoch_fair_tat_like(
     args,
     target_prior,
     class_loss_weights=None,
+    use_amp=False,
+    scaler=None,
 ):
     model.train()
     total_loss = 0.0
@@ -50,8 +66,8 @@ def train_one_epoch_fair_tat_like(
     total_seen = 0
 
     for images, labels in trainloader:
-        images = images.to(device)
-        labels = labels.to(device)
+        images = images.to(device, non_blocking=True)
+        labels = labels.to(device, non_blocking=True)
         target_labels = sample_target_labels(labels, target_prior, args.num_classes)
 
         targeted_images = targeted_pgd_attack(
@@ -62,23 +78,30 @@ def train_one_epoch_fair_tat_like(
             args.epsilon,
             args.alpha,
             args.pgd_steps,
+            use_amp=use_amp,
         )
 
         model.train()
-        clean_outputs = model(images)
-        adv_outputs = model(targeted_images)
-        clean_loss = criterion(clean_outputs, labels)
-        if class_loss_weights is None:
-            adv_loss = criterion(adv_outputs, labels)
-        else:
-            per_sample_adv_loss = F.cross_entropy(adv_outputs, labels, reduction="none")
-            sample_weights = class_loss_weights.to(labels.device)[labels]
-            adv_loss = (per_sample_adv_loss * sample_weights).mean()
-        loss = (1 - args.adv_weight) * clean_loss + args.adv_weight * adv_loss
+        with _autocast(use_amp):
+            clean_outputs = model(images)
+            adv_outputs = model(targeted_images)
+            clean_loss = criterion(clean_outputs, labels)
+            if class_loss_weights is None:
+                adv_loss = criterion(adv_outputs, labels)
+            else:
+                per_sample_adv_loss = F.cross_entropy(adv_outputs, labels, reduction="none")
+                sample_weights = class_loss_weights.to(labels.device)[labels]
+                adv_loss = (per_sample_adv_loss * sample_weights).mean()
+            loss = (1 - args.adv_weight) * clean_loss + args.adv_weight * adv_loss
 
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+        optimizer.zero_grad(set_to_none=True)
+        if scaler is not None and use_amp:
+            scaler.scale(loss).backward()
+            scaler.step(optimizer)
+            scaler.update()
+        else:
+            loss.backward()
+            optimizer.step()
 
         correct, seen = accuracy_from_logits(clean_outputs, labels)
         total_loss += loss.item() * seen

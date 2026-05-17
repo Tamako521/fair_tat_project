@@ -1,0 +1,53 @@
+实验配置：{
+  "data_dir": "data",
+  "output_dir": "week4/experiments/stage10_resnet18_full_blended_prior_weighted_loss_pgd5_amp",
+  "epochs": 8,
+  "batch_size": 1536,
+  "train_size": 0,
+  "test_size": 0,
+  "attack_eval_size": 4096,
+  "num_workers": 8,
+  "pin_memory": true,
+  "amp": true,
+  "learning_rate": 0.001,
+  "model": "resnet18",
+  "seed": 42,
+  "num_classes": 10,
+  "epsilon": 0.03137254901960784,
+  "alpha": 0.00784313725490196,
+  "pgd_steps": 5,
+  "eval_pgd_steps": 10,
+  "eval_ifgsm_steps": 5,
+  "adv_weight": 0.7,
+  "warmup_epochs": 1,
+  "prior_smoothing": 10.0,
+  "prior_mode": "blended",
+  "deficit_source": "targeted_pgd",
+  "deficit_smoothing": 1.0,
+  "deficit_weight": 0.5,
+  "prior_eval_size": 1024,
+  "loss_weight_mode": "robust_deficit",
+  "loss_weight_strength": 1.0,
+  "device": "cuda"
+}
+epoch 1/8 | mode: clean_warmup | train loss: 1.5941 | train acc: 0.4226 | clean acc: 0.2776 | clean worst-class acc: 0.0100 | target prior: [0.095112, 0.055013, 0.200216, 0.158719, 0.066613, 0.168132, 0.054822, 0.054671, 0.089613, 0.057089] | class weights: [0.890498, 1.082515, 0.868064, 0.928332, 1.067378, 0.984163, 1.082779, 1.053823, 0.970308, 1.072139]
+epoch 2/8 | mode: fair_tat_like | train loss: 1.4101 | train acc: 0.5596 | clean acc: 0.5717 | clean worst-class acc: 0.2690 | target prior: [0.070628, 0.100073, 0.07983, 0.132479, 0.116894, 0.105095, 0.100837, 0.088775, 0.105766, 0.099622] | class weights: [1.063492, 0.872097, 1.117482, 1.095854, 1.035122, 1.079772, 0.987763, 0.981515, 0.833102, 0.933802] | adv loss: 1.4944
+epoch 3/8 | mode: fair_tat_like | train loss: 1.3047 | train acc: 0.6252 | clean acc: 0.6173 | clean worst-class acc: 0.3300 | target prior: [0.134302, 0.061633, 0.098102, 0.102074, 0.111179, 0.111713, 0.100307, 0.10306, 0.083102, 0.094527] | class weights: [0.852583, 1.07224, 1.086047, 1.132381, 1.072581, 1.111267, 0.95954, 0.922926, 0.880278, 0.910157] | adv loss: 1.4096
+epoch 4/8 | mode: fair_tat_like | train loss: 1.1722 | train acc: 0.6757 | clean acc: 0.6390 | clean worst-class acc: 0.3120 | target prior: [0.080291, 0.097254, 0.093959, 0.101149, 0.084764, 0.134085, 0.134036, 0.103561, 0.065353, 0.105548] | class weights: [1.004747, 0.874998, 1.105596, 1.208966, 1.137328, 1.015931, 0.917923, 0.890619, 0.994382, 0.849512] | adv loss: 1.2793
+epoch 5/8 | mode: fair_tat_like | train loss: 1.0758 | train acc: 0.7210 | clean acc: 0.5897 | clean worst-class acc: 0.2660 | target prior: [0.080483, 0.207267, 0.094929, 0.105013, 0.091947, 0.118894, 0.089686, 0.092923, 0.059839, 0.05902] | class weights: [0.950598, 0.707319, 1.063457, 1.131899, 1.125163, 0.990776, 0.927664, 0.89486, 1.115895, 1.092368] | adv loss: 1.1907
+epoch 6/8 | mode: fair_tat_like | train loss: 0.9714 | train acc: 0.7557 | clean acc: 0.6932 | clean worst-class acc: 0.3890 | target prior: [0.097767, 0.063193, 0.205003, 0.09497, 0.107434, 0.113227, 0.09067, 0.076415, 0.067698, 0.08362] | class weights: [0.935779, 0.954524, 0.905621, 1.141834, 1.021795, 1.096616, 0.945352, 0.994845, 1.079343, 0.92429] | adv loss: 1.0854
+epoch 7/8 | mode: fair_tat_like | train loss: 0.8876 | train acc: 0.7873 | clean acc: 0.6905 | clean worst-class acc: 0.4800 | target prior: [0.192116, 0.06897, 0.089479, 0.112539, 0.107354, 0.122771, 0.093415, 0.06731, 0.074757, 0.071289] | class weights: [0.781277, 0.88801, 1.063445, 1.142803, 1.061017, 1.03132, 0.982539, 1.045721, 1.060089, 0.943779] | adv loss: 1.0042
+epoch 8/8 | mode: fair_tat_like | train loss: 0.8160 | train acc: 0.8230 | clean acc: 0.6965 | clean worst-class acc: 0.3820 | target prior: [0.081406, 0.068269, 0.073662, 0.122896, 0.076889, 0.133905, 0.117991, 0.115849, 0.102253, 0.106879] | class weights: [0.974204, 0.835884, 1.218067, 1.153302, 1.17095, 1.064058, 0.972257, 0.900716, 0.852086, 0.858476] | adv loss: 0.9391
+最终 clean accuracy: 0.6965
+最终 clean worst-class accuracy: 0.3820
+FGSM robust accuracy: 0.3585
+FGSM worst-class robust accuracy: 0.0530
+multi-step FGSM robust accuracy: 0.3166
+multi-step FGSM worst-class robust accuracy: 0.0254
+untargeted PGD robust accuracy: 0.2917
+untargeted PGD worst-class robust accuracy: 0.0169
+targeted PGD original accuracy: 0.5723
+targeted PGD worst-class robust accuracy: 0.2324
+targeted PGD target success rate: 0.2500
+指标已保存：week4/experiments/stage10_resnet18_full_blended_prior_weighted_loss_pgd5_amp/metrics.json
+模型已保存：week4/experiments/stage10_resnet18_full_blended_prior_weighted_loss_pgd5_amp/model.pth
