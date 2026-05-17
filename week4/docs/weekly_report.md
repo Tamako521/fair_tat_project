@@ -57,6 +57,7 @@
 
 ## 六、材料位置
 
+实验材料已整理到[项目](https://github.com/Tamako521/fair_tat_project.git)目录中：
 - 本周周报：`week4/docs/weekly_report.md`
 - 主要实验目录：`week4/experiments/stage01_best_baseline_20k` 至 `week4/experiments/stage14_resnet18_full_adv08_pgd3_bs128_seed7`
 - 当前最佳实验：`week4/experiments/stage13_resnet18_full_adv08_pgd3_bs128` 和 `week4/experiments/stage14_resnet18_full_adv08_pgd3_bs128_seed7`
