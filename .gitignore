@@ -53,3 +53,5 @@ tensorboard/
 
 # Jupyter
 .ipynb_checkpoints/
+
+bash setup_torch_sjtu.sh

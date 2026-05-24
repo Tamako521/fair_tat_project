@@ -109,6 +109,7 @@ def parse_args():
     parser.add_argument("--num-workers", type=int, default=0)
     parser.add_argument("--pin-memory", action="store_true")
     parser.add_argument("--amp", action="store_true")
+    parser.add_argument("--disable-cudnn", action="store_true")
     parser.add_argument("--learning-rate", type=float, default=0.001)
     parser.add_argument("--model", type=str, default="small_cnn", choices=["small_cnn", "resnet18"])
     parser.add_argument("--seed", type=int, default=42)
@@ -160,7 +161,11 @@ def main():
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     if device.type == "cuda":
-        torch.backends.cudnn.benchmark = True
+        if args.disable_cudnn:
+            torch.backends.cudnn.enabled = False
+            torch.backends.cudnn.benchmark = False
+        else:
+            torch.backends.cudnn.benchmark = True
     use_amp = args.amp and device.type == "cuda"
 
     trainloader, testloader = build_dataset_loaders(
