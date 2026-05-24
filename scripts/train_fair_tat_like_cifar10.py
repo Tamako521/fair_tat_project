@@ -10,7 +10,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from src.data import build_cifar10_loaders
+from src.data import build_dataset_loaders, get_num_classes
 from src.evaluation import evaluate_clean, evaluate_robustness
 from src.models import build_model
 from src.target_selection import (
@@ -97,7 +97,8 @@ def update_class_loss_weights(clean_metrics, deficit_metrics, args, device):
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="FAIR-TAT-like CIFAR-10 targeted adversarial training")
+    parser = argparse.ArgumentParser(description="FAIR-TAT-like targeted adversarial training")
+    parser.add_argument("--dataset", type=str, default="cifar10", choices=["cifar10", "cifar100"])
     parser.add_argument("--data-dir", type=str, default="data")
     parser.add_argument("--output-dir", type=str, default="week2/experiments/stage01_fair_tat_like_smoke")
     parser.add_argument("--epochs", type=int, default=2)
@@ -111,7 +112,7 @@ def parse_args():
     parser.add_argument("--learning-rate", type=float, default=0.001)
     parser.add_argument("--model", type=str, default="small_cnn", choices=["small_cnn", "resnet18"])
     parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--num-classes", type=int, default=10)
+    parser.add_argument("--num-classes", type=int, default=None)
     parser.add_argument("--epsilon", type=float, default=8 / 255)
     parser.add_argument("--alpha", type=float, default=2 / 255)
     parser.add_argument("--pgd-steps", type=int, default=3)
@@ -147,6 +148,8 @@ def parse_args():
 
 def main():
     args = parse_args()
+    if args.num_classes is None:
+        args.num_classes = get_num_classes(args.dataset)
     set_seed(args.seed)
 
     output_dir = Path(args.output_dir)
@@ -160,7 +163,8 @@ def main():
         torch.backends.cudnn.benchmark = True
     use_amp = args.amp and device.type == "cuda"
 
-    trainloader, testloader = build_cifar10_loaders(
+    trainloader, testloader = build_dataset_loaders(
+        args.dataset,
         args.data_dir,
         args.train_size,
         args.test_size,
@@ -278,7 +282,10 @@ def main():
         ),
         "clean_eval": clean_metrics,
         "robust_eval": robust_metrics,
-        "method_note": "该入口为 FAIR-TAT-like 轻量复现：使用 class false positive prior 采样 targeted PGD 的目标类别。",
+        "method_note": (
+            f"该入口为 FAIR-TAT-like 轻量复现：在 {args.dataset} 上使用 class false positive prior "
+            "与 robust deficit prior 采样 targeted PGD 的目标类别。"
+        ),
     }
 
     metrics_path = output_dir / "metrics.json"

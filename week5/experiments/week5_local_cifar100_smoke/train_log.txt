@@ -1,0 +1,47 @@
+实验配置：{
+  "dataset": "cifar100",
+  "data_dir": "data",
+  "output_dir": "week5\\experiments\\week5_local_cifar100_smoke",
+  "epochs": 1,
+  "batch_size": 16,
+  "train_size": 128,
+  "test_size": 64,
+  "attack_eval_size": 32,
+  "num_workers": 0,
+  "pin_memory": false,
+  "amp": false,
+  "learning_rate": 0.001,
+  "model": "small_cnn",
+  "seed": 42,
+  "num_classes": 100,
+  "epsilon": 0.03137254901960784,
+  "alpha": 0.00784313725490196,
+  "pgd_steps": 1,
+  "eval_pgd_steps": 1,
+  "eval_ifgsm_steps": 1,
+  "adv_weight": 0.7,
+  "warmup_epochs": 0,
+  "prior_smoothing": 10.0,
+  "prior_mode": "blended",
+  "deficit_source": "targeted_pgd",
+  "deficit_smoothing": 1.0,
+  "deficit_weight": 0.5,
+  "prior_eval_size": 32,
+  "loss_weight_mode": "robust_deficit",
+  "loss_weight_strength": 1.0,
+  "device": "cpu"
+}
+epoch 1/1 | mode: fair_tat_like | train loss: 4.6219 | train acc: 0.0156 | clean acc: 0.0000 | clean worst-class acc: 0.0000 | target prior: [0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.039774, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699, 0.009699] | class weights: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0] | adv loss: 4.6219
+最终 clean accuracy: 0.0000
+最终 clean worst-class accuracy: 0.0000
+FGSM robust accuracy: 0.0000
+FGSM worst-class robust accuracy: 0.0000
+multi-step FGSM robust accuracy: 0.0000
+multi-step FGSM worst-class robust accuracy: 0.0000
+untargeted PGD robust accuracy: 0.0000
+untargeted PGD worst-class robust accuracy: 0.0000
+targeted PGD original accuracy: 0.0000
+targeted PGD worst-class robust accuracy: 0.0000
+targeted PGD target success rate: 0.0000
+指标已保存：week5\experiments\week5_local_cifar100_smoke\metrics.json
+模型已保存：week5\experiments\week5_local_cifar100_smoke\model.pth
