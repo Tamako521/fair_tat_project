@@ -57,3 +57,19 @@ ISIC 2019 分类任务主要包含 8 个皮肤病变类别：
 - ISIC 2019 Challenge：https://challenge.isic-archive.com/landing/2019/
 - ISIC Challenge Data：https://challenge.isic-archive.com/data/
 - Gessert et al., Skin Lesion Classification Using Ensembles of Multi-Resolution EfficientNets with Meta Data：https://arxiv.org/abs/1910.03910
+
+## 六、本周 metadata 统计结果
+
+已完成 ISIC 2019 metadata 统计，结果保存在：
+
+`week6/experiments/isic2019_metadata_analysis/isic2019_metadata_summary.md`
+
+主要结果：
+
+- 样本数：25,331
+- 性别分布：male 13,286，female 11,661，unknown 384
+- 年龄段分布：61+ 为 8,769，46-60 为 6,695，31-45 为 6,482，0-30 为 2,903，unknown 482
+- 解剖部位分布：anterior torso 6,915，lower extremity 5,000，head/neck 4,587，upper extremity 2,910，posterior torso 2,787，unknown 2,582
+- lesion_id 可用，存在同一病灶多张图像情况，后续划分数据集时需要注意泄漏问题
+
+该统计说明 ISIC 2019 适合后续做性别、年龄段、解剖部位和疾病类别维度的公平性评测。

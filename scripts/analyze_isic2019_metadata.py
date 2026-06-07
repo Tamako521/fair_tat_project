@@ -28,6 +28,23 @@ def is_missing(value):
     return value == "" or value.lower() in {"nan", "none", "null", "unknown", "unk"}
 
 
+def normalize_diagnosis_label(label):
+    label = str(label).strip().lower()
+    mapping = {
+        "melanoma": "MEL",
+        "nevus": "NV",
+        "basal cell carcinoma": "BCC",
+        "actinic keratosis": "AK",
+        "pigmented benign keratosis": "BKL",
+        "seborrheic keratosis": "BKL",
+        "solar lentigo": "BKL",
+        "dermatofibroma": "DF",
+        "vascular lesion": "VASC",
+        "squamous cell carcinoma": "SCC",
+    }
+    return mapping.get(label, label)
+
+
 def get_label(row):
     for column in DISEASE_COLUMNS:
         value = str(row.get(column, "")).strip()
@@ -37,7 +54,7 @@ def get_label(row):
     for column in ["diagnosis", "label", "target", "benign_malignant"]:
         value = row.get(column)
         if not is_missing(value):
-            return str(value).strip()
+            return normalize_diagnosis_label(value)
 
     return "unknown"
 
@@ -99,6 +116,45 @@ def counter_to_dict(counter):
     return dict(counter.most_common())
 
 
+def read_csv_rows(csv_path):
+    with csv_path.open("r", encoding="utf-8-sig", newline="") as f:
+        reader = csv.DictReader(f)
+        return list(reader), reader.fieldnames or []
+
+
+def get_image_key(row):
+    return normalize_key(row, ["image", "image_id", "isic_id", "name"])
+
+
+def merge_groundtruth(rows, groundtruth_path):
+    groundtruth_rows, groundtruth_fields = read_csv_rows(groundtruth_path)
+    if not rows or not groundtruth_rows:
+        return rows, groundtruth_fields, 0
+
+    metadata_image_key = get_image_key(rows[0])
+    groundtruth_image_key = get_image_key(groundtruth_rows[0])
+    if metadata_image_key is None or groundtruth_image_key is None:
+        return rows, groundtruth_fields, 0
+
+    label_by_image = {}
+    for row in groundtruth_rows:
+        image_id = row.get(groundtruth_image_key)
+        if not is_missing(image_id):
+            label_by_image[str(image_id).strip()] = {key: row.get(key, "") for key in DISEASE_COLUMNS if key in row}
+
+    merged_count = 0
+    for row in rows:
+        image_id = row.get(metadata_image_key)
+        if is_missing(image_id):
+            continue
+        labels = label_by_image.get(str(image_id).strip())
+        if labels is None:
+            continue
+        row.update(labels)
+        merged_count += 1
+    return rows, groundtruth_fields, merged_count
+
+
 def write_markdown(output_path, summary):
     lines = [
         "# ISIC 2019 Metadata 统计结果",
@@ -107,6 +163,7 @@ def write_markdown(output_path, summary):
         "",
         f"- 样本数：{summary['num_rows']}",
         f"- 字段数：{len(summary['fieldnames'])}",
+        f"- ground truth 合并数量：{summary['groundtruth_merged_rows']}",
         "",
         "## 二、疾病类别分布",
         "",
@@ -180,11 +237,25 @@ def write_markdown(output_path, summary):
 
 
 def analyze_metadata(metadata_path, output_dir):
-    with metadata_path.open("r", encoding="utf-8-sig", newline="") as f:
-        reader = csv.DictReader(f)
-        rows = list(reader)
-        fieldnames = reader.fieldnames or []
+    rows, fieldnames = read_csv_rows(metadata_path)
+    if not rows:
+        raise ValueError(f"metadata 文件没有数据行，请检查是否下载错误或文件为空：{metadata_path}")
+    groundtruth_fields = []
+    groundtruth_merged_rows = 0
 
+    return build_summary(metadata_path, output_dir, rows, fieldnames, groundtruth_fields, groundtruth_merged_rows)
+
+
+def analyze_metadata_with_groundtruth(metadata_path, groundtruth_path, output_dir):
+    rows, fieldnames = read_csv_rows(metadata_path)
+    if not rows:
+        raise ValueError(f"metadata 文件没有数据行，请检查是否下载错误或文件为空：{metadata_path}")
+    rows, groundtruth_fields, groundtruth_merged_rows = merge_groundtruth(rows, groundtruth_path)
+    merged_fields = list(dict.fromkeys(fieldnames + groundtruth_fields))
+    return build_summary(metadata_path, output_dir, rows, merged_fields, groundtruth_fields, groundtruth_merged_rows)
+
+
+def build_summary(metadata_path, output_dir, rows, fieldnames, groundtruth_fields, groundtruth_merged_rows):
     sex_key = normalize_key(rows[0] if rows else {}, ["sex", "gender"])
     age_key = normalize_key(rows[0] if rows else {}, ["age_approx", "age", "approx_age"])
     anatom_key = normalize_key(
@@ -202,6 +273,8 @@ def analyze_metadata(metadata_path, output_dir):
         "metadata_path": str(metadata_path),
         "num_rows": len(rows),
         "fieldnames": fieldnames,
+        "groundtruth_fields": groundtruth_fields,
+        "groundtruth_merged_rows": groundtruth_merged_rows,
         "detected_columns": {
             "sex": sex_key,
             "age": age_key,
@@ -229,6 +302,7 @@ def analyze_metadata(metadata_path, output_dir):
 def parse_args():
     parser = argparse.ArgumentParser(description="Analyze ISIC 2019 metadata for fairness evaluation.")
     parser.add_argument("--metadata", type=str, required=True, help="Path to ISIC 2019 metadata CSV.")
+    parser.add_argument("--groundtruth", type=str, default=None, help="Optional path to ISIC 2019 ground truth CSV.")
     parser.add_argument("--output-dir", type=str, default="week6/experiments/isic2019_metadata_analysis")
     return parser.parse_args()
 
@@ -236,11 +310,17 @@ def parse_args():
 def main():
     args = parse_args()
     metadata_path = Path(args.metadata)
+    groundtruth_path = Path(args.groundtruth) if args.groundtruth is not None else None
     output_dir = Path(args.output_dir)
     if not metadata_path.exists():
         raise FileNotFoundError(f"metadata 文件不存在：{metadata_path}")
+    if groundtruth_path is not None and not groundtruth_path.exists():
+        raise FileNotFoundError(f"ground truth 文件不存在：{groundtruth_path}")
 
-    json_path, md_path = analyze_metadata(metadata_path, output_dir)
+    if groundtruth_path is None:
+        json_path, md_path = analyze_metadata(metadata_path, output_dir)
+    else:
+        json_path, md_path = analyze_metadata_with_groundtruth(metadata_path, groundtruth_path, output_dir)
     print(f"JSON 结果已保存：{json_path}")
     print(f"Markdown 结果已保存：{md_path}")
 
