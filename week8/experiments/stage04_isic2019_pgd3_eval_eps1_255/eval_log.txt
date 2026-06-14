@@ -1,0 +1,25 @@
+实验配置：{
+  "splits_dir": "week7/experiments/isic2019_splits_available",
+  "image_dir": "data/isic2019/images",
+  "checkpoint": "week7/experiments/stage06_isic2019_pretrained_full_lr5e5/model.pth",
+  "output_dir": "week8/experiments/stage04_isic2019_pgd3_eval_eps1_255",
+  "split": "test",
+  "attack": "pgd",
+  "epsilon": 0.00392156862745098,
+  "alpha": 0.00196078431372549,
+  "steps": 3,
+  "eval_size": 512,
+  "batch_size": 64,
+  "num_workers": 8,
+  "pin_memory": true,
+  "amp": true,
+  "pretrained": true,
+  "image_size": 224,
+  "seed": 42,
+  "device": "cuda"
+}
+clean accuracy: 0.6543
+adversarial accuracy: 0.0059
+adversarial worst-class accuracy: 0.0000
+adversarial anatom-site worst-group accuracy: 0.0000
+指标已保存：week8/experiments/stage04_isic2019_pgd3_eval_eps1_255/metrics.json
