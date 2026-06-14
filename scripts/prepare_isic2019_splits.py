@@ -76,13 +76,55 @@ def read_rows(csv_path):
         return list(reader)
 
 
+def merge_groundtruth(rows, groundtruth_path):
+    groundtruth_rows = read_rows(groundtruth_path)
+    if not rows or not groundtruth_rows:
+        return rows, 0
+
+    metadata_by_image = {}
+    for row in rows:
+        image_id = get_image_id(row)
+        if image_id:
+            metadata_by_image[image_id.lower()] = row
+
+    merged_count = 0
+    for gt_row in groundtruth_rows:
+        image_id = get_image_id(gt_row)
+        if not image_id:
+            continue
+        metadata_row = metadata_by_image.get(image_id.lower())
+        if metadata_row is None:
+            continue
+        for label in DISEASE_LABELS:
+            if label in gt_row:
+                metadata_row[label] = gt_row[label]
+        merged_count += 1
+    return rows, merged_count
+
+
 def build_image_path(image_dir, image_id, image_ext):
     if not image_id:
         return ""
     return str(Path(image_dir) / f"{image_id}{image_ext}")
 
 
-def normalize_row(row, image_dir, image_ext):
+def build_image_index(image_dir):
+    image_root = Path(image_dir)
+    if not image_root.exists():
+        return {}
+
+    image_index = {}
+    for path in image_root.rglob("*"):
+        if not path.is_file() or path.suffix.lower() not in {".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff"}:
+            continue
+        stem = path.stem.lower()
+        image_index.setdefault(stem, path)
+        if stem.endswith("_downsampled"):
+            image_index.setdefault(stem.removesuffix("_downsampled"), path)
+    return image_index
+
+
+def normalize_row(row, image_dir, image_ext, image_index=None):
     image_id = get_image_id(row)
     label = get_label(row)
     sex = row.get("sex", "unknown")
@@ -90,10 +132,13 @@ def normalize_row(row, image_dir, image_ext):
     anatom_site = row.get("anatom_site_general", "unknown")
     lesion_id = row.get("lesion_id", "")
     patient_id = row.get("patient_id", "")
+    indexed_path = None
+    if image_index is not None and image_id:
+        indexed_path = image_index.get(image_id.lower())
 
     return {
         "image_id": image_id,
-        "image_path": build_image_path(image_dir, image_id, image_ext),
+        "image_path": str(indexed_path) if indexed_path is not None else build_image_path(image_dir, image_id, image_ext),
         "label": label,
         "sex": "unknown" if is_missing(sex) else str(sex).strip().lower(),
         "age_approx": "" if is_missing(age) else str(age).strip(),
@@ -207,9 +252,11 @@ def write_markdown(path, summary):
 def parse_args():
     parser = argparse.ArgumentParser(description="Prepare ISIC 2019 metadata splits.")
     parser.add_argument("--metadata", type=str, required=True)
+    parser.add_argument("--groundtruth", type=str, default=None)
     parser.add_argument("--output-dir", type=str, default="week6/experiments/isic2019_splits")
     parser.add_argument("--image-dir", type=str, default="data/isic2019/images")
     parser.add_argument("--image-ext", type=str, default=".jpg")
+    parser.add_argument("--require-images", action="store_true")
     parser.add_argument("--train-ratio", type=float, default=0.7)
     parser.add_argument("--val-ratio", type=float, default=0.15)
     parser.add_argument("--seed", type=int, default=42)
@@ -222,14 +269,35 @@ def main():
     output_dir = Path(args.output_dir)
     if not metadata_path.exists():
         raise FileNotFoundError(f"metadata 文件不存在：{metadata_path}")
+    groundtruth_path = Path(args.groundtruth) if args.groundtruth is not None else None
+    if groundtruth_path is not None and not groundtruth_path.exists():
+        raise FileNotFoundError(f"ground truth 文件不存在：{groundtruth_path}")
+
+    image_index = build_image_index(args.image_dir) if args.require_images else None
+    if args.require_images and not image_index:
+        raise FileNotFoundError(f"没有在图片目录中找到图片：{args.image_dir}")
+
+    raw_rows = read_rows(metadata_path)
+    if groundtruth_path is not None:
+        raw_rows, merged_count = merge_groundtruth(raw_rows, groundtruth_path)
+        print(f"ground truth 合并数量：{merged_count}")
 
     rows = [
-        normalize_row(row, args.image_dir, args.image_ext)
-        for row in read_rows(metadata_path)
+        normalize_row(row, args.image_dir, args.image_ext, image_index=image_index)
+        for row in raw_rows
     ]
+    total_normalized_rows = len(rows)
     rows = [row for row in rows if row["image_id"] and row["label"] in DISEASE_LABELS]
+    labeled_rows = len(rows)
+    if args.require_images:
+        rows = [row for row in rows if row["image_id"].lower() in image_index]
     if not rows:
-        raise ValueError("没有可用于划分的数据，请检查 metadata 的 image/diagnosis 字段。")
+        raise ValueError(
+            "没有可用于划分的数据。"
+            f"原始行数={total_normalized_rows}, 有效标签行数={labeled_rows}, "
+            f"图片索引数={len(image_index) if image_index is not None else '未启用'}。"
+            "请检查是否需要传入 --groundtruth，或 image_id 是否与图片文件名匹配。"
+        )
 
     split_rows = split_groups(rows, args.train_ratio, args.val_ratio, args.seed)
     all_rows = split_rows["train"] + split_rows["val"] + split_rows["test"]

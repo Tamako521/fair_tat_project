@@ -1,0 +1,445 @@
+{
+  "config": {
+    "splits_dir": "week7/experiments/isic2019_splits_available",
+    "image_dir": "data/isic2019/images",
+    "output_dir": "week7/experiments/stage06_isic2019_pretrained_full_lr5e5",
+    "epochs": 6,
+    "batch_size": 64,
+    "num_workers": 4,
+    "pin_memory": true,
+    "amp": true,
+    "disable_cudnn": false,
+    "pretrained": true,
+    "image_size": 224,
+    "learning_rate": 5e-05,
+    "weight_decay": 0.0001,
+    "class_weight": "balanced",
+    "train_size": 0,
+    "val_size": 0,
+    "test_size": 0,
+    "seed": 42,
+    "device": "cuda",
+    "num_classes": 8,
+    "labels": [
+      "MEL",
+      "NV",
+      "BCC",
+      "AK",
+      "BKL",
+      "DF",
+      "VASC",
+      "SCC"
+    ]
+  },
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 1.3189464204878523,
+      "train_accuracy": 0.5317361894024802,
+      "val_loss": 1.1189215517793025,
+      "val_accuracy": 0.5984293193717277,
+      "val_balanced_accuracy": 0.523459563776537,
+      "val_worst_class_accuracy": 0.3055555555555556
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.78767567332729,
+      "train_accuracy": 0.6856257046223224,
+      "val_loss": 0.990455831532703,
+      "val_accuracy": 0.6358638743455497,
+      "val_balanced_accuracy": 0.5476083969028206,
+      "val_worst_class_accuracy": 0.3333333333333333
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.5507173336345152,
+      "train_accuracy": 0.7492671927846675,
+      "val_loss": 0.9543925486934123,
+      "val_accuracy": 0.6554973821989529,
+      "val_balanced_accuracy": 0.5429811375527147,
+      "val_worst_class_accuracy": 0.22105263157894736
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.41029945524596306,
+      "train_accuracy": 0.794250281848929,
+      "val_loss": 1.033666835779919,
+      "val_accuracy": 0.6392670157068063,
+      "val_balanced_accuracy": 0.5569551027645632,
+      "val_worst_class_accuracy": 0.3611111111111111
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.296582126603992,
+      "train_accuracy": 0.8374295377677565,
+      "val_loss": 0.913242138368297,
+      "val_accuracy": 0.6848167539267016,
+      "val_balanced_accuracy": 0.5376113974580465,
+      "val_worst_class_accuracy": 0.28421052631578947
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.21898775819054855,
+      "train_accuracy": 0.8708004509582864,
+      "val_loss": 0.9339767357441767,
+      "val_accuracy": 0.6952879581151833,
+      "val_balanced_accuracy": 0.5434783958240474,
+      "val_worst_class_accuracy": 0.28421052631578947
+    }
+  ],
+  "val_eval": {
+    "loss": 1.033666835779919,
+    "accuracy": 0.6392670157068063,
+    "balanced_accuracy": 0.5569551027645632,
+    "class_accuracy": {
+      "MEL": 0.47674418604651164,
+      "NV": 0.7326783867631851,
+      "BCC": 0.6606786427145709,
+      "AK": 0.4015151515151515,
+      "BKL": 0.5808080808080808,
+      "DF": 0.3611111111111111,
+      "VASC": 0.8421052631578947,
+      "SCC": 0.4
+    },
+    "class_seen": {
+      "MEL": 688,
+      "NV": 1934,
+      "BCC": 501,
+      "AK": 132,
+      "BKL": 396,
+      "DF": 36,
+      "VASC": 38,
+      "SCC": 95
+    },
+    "worst_class_accuracy": 0.3611111111111111,
+    "group_metrics": {
+      "label": {
+        "groups": {
+          "NV": {
+            "seen": 1934,
+            "correct": 1417,
+            "accuracy": 0.7326783867631851
+          },
+          "MEL": {
+            "seen": 688,
+            "correct": 328,
+            "accuracy": 0.47674418604651164
+          },
+          "BKL": {
+            "seen": 396,
+            "correct": 230,
+            "accuracy": 0.5808080808080808
+          },
+          "DF": {
+            "seen": 36,
+            "correct": 13,
+            "accuracy": 0.3611111111111111
+          },
+          "SCC": {
+            "seen": 95,
+            "correct": 38,
+            "accuracy": 0.4
+          },
+          "BCC": {
+            "seen": 501,
+            "correct": 331,
+            "accuracy": 0.6606786427145709
+          },
+          "VASC": {
+            "seen": 38,
+            "correct": 32,
+            "accuracy": 0.8421052631578947
+          },
+          "AK": {
+            "seen": 132,
+            "correct": 53,
+            "accuracy": 0.4015151515151515
+          }
+        },
+        "worst_group_accuracy": 0.3611111111111111,
+        "macro_group_accuracy": 0.5569551027645632
+      },
+      "sex": {
+        "groups": {
+          "female": {
+            "seen": 1853,
+            "correct": 1221,
+            "accuracy": 0.6589314624932542
+          },
+          "male": {
+            "seen": 1908,
+            "correct": 1188,
+            "accuracy": 0.6226415094339622
+          },
+          "unknown": {
+            "seen": 59,
+            "correct": 33,
+            "accuracy": 0.559322033898305
+          }
+        },
+        "worst_group_accuracy": 0.559322033898305,
+        "macro_group_accuracy": 0.6136316686085072
+      },
+      "age_group": {
+        "groups": {
+          "31-45": {
+            "seen": 979,
+            "correct": 703,
+            "accuracy": 0.7180796731358529
+          },
+          "0-30": {
+            "seen": 462,
+            "correct": 312,
+            "accuracy": 0.6753246753246753
+          },
+          "46-60": {
+            "seen": 987,
+            "correct": 672,
+            "accuracy": 0.6808510638297872
+          },
+          "61+": {
+            "seen": 1325,
+            "correct": 717,
+            "accuracy": 0.5411320754716981
+          },
+          "unknown": {
+            "seen": 67,
+            "correct": 38,
+            "accuracy": 0.5671641791044776
+          }
+        },
+        "worst_group_accuracy": 0.5411320754716981,
+        "macro_group_accuracy": 0.6365103333732982
+      },
+      "anatom_site_general": {
+        "groups": {
+          "lower extremity": {
+            "seen": 710,
+            "correct": 485,
+            "accuracy": 0.6830985915492958
+          },
+          "anterior torso": {
+            "seen": 1015,
+            "correct": 646,
+            "accuracy": 0.6364532019704433
+          },
+          "unknown": {
+            "seen": 407,
+            "correct": 341,
+            "accuracy": 0.8378378378378378
+          },
+          "upper extremity": {
+            "seen": 467,
+            "correct": 281,
+            "accuracy": 0.6017130620985011
+          },
+          "head/neck": {
+            "seen": 671,
+            "correct": 323,
+            "accuracy": 0.481371087928465
+          },
+          "posterior torso": {
+            "seen": 448,
+            "correct": 307,
+            "accuracy": 0.6852678571428571
+          },
+          "oral/genital": {
+            "seen": 21,
+            "correct": 6,
+            "accuracy": 0.2857142857142857
+          },
+          "lateral torso": {
+            "seen": 9,
+            "correct": 6,
+            "accuracy": 0.6666666666666666
+          },
+          "palms/soles": {
+            "seen": 72,
+            "correct": 47,
+            "accuracy": 0.6527777777777778
+          }
+        },
+        "worst_group_accuracy": 0.2857142857142857,
+        "macro_group_accuracy": 0.6145444854095701
+      }
+    }
+  },
+  "test_eval": {
+    "loss": 0.9780522353198351,
+    "accuracy": 0.6587112171837709,
+    "balanced_accuracy": 0.5849515075090209,
+    "class_accuracy": {
+      "MEL": 0.5359281437125748,
+      "NV": 0.7441619097042034,
+      "BCC": 0.6093117408906883,
+      "AK": 0.4921875,
+      "BKL": 0.6461538461538462,
+      "DF": 0.6285714285714286,
+      "VASC": 0.7222222222222222,
+      "SCC": 0.3010752688172043
+    },
+    "class_seen": {
+      "MEL": 668,
+      "NV": 1927,
+      "BCC": 494,
+      "AK": 128,
+      "BKL": 390,
+      "DF": 35,
+      "VASC": 36,
+      "SCC": 93
+    },
+    "worst_class_accuracy": 0.3010752688172043,
+    "group_metrics": {
+      "label": {
+        "groups": {
+          "NV": {
+            "seen": 1927,
+            "correct": 1434,
+            "accuracy": 0.7441619097042034
+          },
+          "MEL": {
+            "seen": 668,
+            "correct": 358,
+            "accuracy": 0.5359281437125748
+          },
+          "BKL": {
+            "seen": 390,
+            "correct": 252,
+            "accuracy": 0.6461538461538462
+          },
+          "DF": {
+            "seen": 35,
+            "correct": 22,
+            "accuracy": 0.6285714285714286
+          },
+          "SCC": {
+            "seen": 93,
+            "correct": 28,
+            "accuracy": 0.3010752688172043
+          },
+          "BCC": {
+            "seen": 494,
+            "correct": 301,
+            "accuracy": 0.6093117408906883
+          },
+          "VASC": {
+            "seen": 36,
+            "correct": 26,
+            "accuracy": 0.7222222222222222
+          },
+          "AK": {
+            "seen": 128,
+            "correct": 63,
+            "accuracy": 0.4921875
+          }
+        },
+        "worst_group_accuracy": 0.3010752688172043,
+        "macro_group_accuracy": 0.5849515075090209
+      },
+      "sex": {
+        "groups": {
+          "unknown": {
+            "seen": 43,
+            "correct": 24,
+            "accuracy": 0.5581395348837209
+          },
+          "male": {
+            "seen": 2053,
+            "correct": 1338,
+            "accuracy": 0.6517291768144179
+          },
+          "female": {
+            "seen": 1675,
+            "correct": 1122,
+            "accuracy": 0.6698507462686567
+          }
+        },
+        "worst_group_accuracy": 0.5581395348837209,
+        "macro_group_accuracy": 0.6265731526555985
+      },
+      "age_group": {
+        "groups": {
+          "unknown": {
+            "seen": 53,
+            "correct": 29,
+            "accuracy": 0.5471698113207547
+          },
+          "46-60": {
+            "seen": 1085,
+            "correct": 702,
+            "accuracy": 0.6470046082949309
+          },
+          "31-45": {
+            "seen": 925,
+            "correct": 679,
+            "accuracy": 0.7340540540540541
+          },
+          "0-30": {
+            "seen": 450,
+            "correct": 319,
+            "accuracy": 0.7088888888888889
+          },
+          "61+": {
+            "seen": 1258,
+            "correct": 755,
+            "accuracy": 0.6001589825119237
+          }
+        },
+        "worst_group_accuracy": 0.5471698113207547,
+        "macro_group_accuracy": 0.6474552690141104
+      },
+      "anatom_site_general": {
+        "groups": {
+          "unknown": {
+            "seen": 389,
+            "correct": 332,
+            "accuracy": 0.8534704370179949
+          },
+          "lower extremity": {
+            "seen": 715,
+            "correct": 500,
+            "accuracy": 0.6993006993006993
+          },
+          "posterior torso": {
+            "seen": 462,
+            "correct": 316,
+            "accuracy": 0.683982683982684
+          },
+          "upper extremity": {
+            "seen": 413,
+            "correct": 254,
+            "accuracy": 0.6150121065375302
+          },
+          "anterior torso": {
+            "seen": 1054,
+            "correct": 705,
+            "accuracy": 0.6688804554079696
+          },
+          "head/neck": {
+            "seen": 657,
+            "correct": 331,
+            "accuracy": 0.5038051750380518
+          },
+          "palms/soles": {
+            "seen": 68,
+            "correct": 41,
+            "accuracy": 0.6029411764705882
+          },
+          "oral/genital": {
+            "seen": 10,
+            "correct": 2,
+            "accuracy": 0.2
+          },
+          "lateral torso": {
+            "seen": 3,
+            "correct": 3,
+            "accuracy": 1.0
+          }
+        },
+        "worst_group_accuracy": 0.2,
+        "macro_group_accuracy": 0.6474880815283909
+      }
+    }
+  },
+  "method_note": "ISIC 2019 clean baseline，按疾病类别、性别、年龄段和解剖部位输出分组评测。"
+}

@@ -1,0 +1,47 @@
+实验配置：{
+  "splits_dir": "week7/experiments/isic2019_splits_available",
+  "image_dir": "data/isic2019/images",
+  "output_dir": "week7/experiments/stage08_isic2019_pretrained_full_label_sampler",
+  "epochs": 6,
+  "batch_size": 256,
+  "num_workers": 8,
+  "pin_memory": true,
+  "amp": true,
+  "disable_cudnn": false,
+  "pretrained": true,
+  "image_size": 224,
+  "learning_rate": 5e-05,
+  "weight_decay": 0.0001,
+  "class_weight": "balanced",
+  "sampler": "balanced_label",
+  "train_size": 0,
+  "val_size": 0,
+  "test_size": 0,
+  "seed": 42,
+  "device": "cuda",
+  "num_classes": 8,
+  "labels": [
+    "MEL",
+    "NV",
+    "BCC",
+    "AK",
+    "BKL",
+    "DF",
+    "VASC",
+    "SCC"
+  ]
+}
+epoch 1/6 | train loss: 0.7125 | train acc: 0.4361 | val acc: 0.1607 | val balanced acc: 0.3991 | val worst-class acc: 0.0060
+epoch 2/6 | train loss: 0.2471 | train acc: 0.6223 | val acc: 0.2785 | val balanced acc: 0.4765 | val worst-class acc: 0.1758
+epoch 3/6 | train loss: 0.1471 | train acc: 0.7240 | val acc: 0.3914 | val balanced acc: 0.5040 | val worst-class acc: 0.2782
+epoch 4/6 | train loss: 0.1012 | train acc: 0.7976 | val acc: 0.4484 | val balanced acc: 0.5082 | val worst-class acc: 0.3594
+epoch 5/6 | train loss: 0.0725 | train acc: 0.8377 | val acc: 0.4788 | val balanced acc: 0.5082 | val worst-class acc: 0.3056
+epoch 6/6 | train loss: 0.0581 | train acc: 0.8557 | val acc: 0.5223 | val balanced acc: 0.5326 | val worst-class acc: 0.2842
+最终 val accuracy: 0.5223
+最终 val balanced accuracy: 0.5326
+最终 val worst-class accuracy: 0.2842
+最终 test accuracy: 0.5317
+最终 test balanced accuracy: 0.5672
+最终 test worst-class accuracy: 0.2366
+指标已保存：week7/experiments/stage08_isic2019_pretrained_full_label_sampler/metrics.json
+模型已保存：week7/experiments/stage08_isic2019_pretrained_full_label_sampler/model.pth

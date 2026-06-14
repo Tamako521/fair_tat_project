@@ -34,8 +34,18 @@ def build_image_index(image_root):
     for path in image_root.rglob("*"):
         if not path.is_file() or path.suffix.lower() not in IMAGE_EXTENSIONS:
             continue
-        image_index.setdefault(path.stem.lower(), path)
+        stem = path.stem.lower()
+        image_index.setdefault(stem, path)
+        if stem.endswith("_downsampled"):
+            image_index.setdefault(stem.removesuffix("_downsampled"), path)
     return image_index
+
+
+def normalize_image_id(value):
+    image_id = str(value or "").strip()
+    if not image_id:
+        return ""
+    return Path(image_id).stem.lower()
 
 
 def resolve_image_path(row, project_root, image_dir, image_ext, image_index):
@@ -49,7 +59,7 @@ def resolve_image_path(row, project_root, image_dir, image_ext, image_index):
 
     image_id = row.get("image_id", "").strip()
     if image_id:
-        indexed_path = image_index.get(image_id.lower())
+        indexed_path = image_index.get(normalize_image_id(image_id))
         if indexed_path is not None:
             return indexed_path
 
@@ -104,6 +114,16 @@ def validate_image_files(rows, project_root, image_dir, image_ext, max_open, ima
     return existing, missing, open_result
 
 
+def collect_split_image_ids(split_summaries):
+    image_ids = set()
+    for split in split_summaries:
+        for image_id in split["all_image_ids"]:
+            normalized = normalize_image_id(image_id)
+            if normalized:
+                image_ids.add(normalized)
+    return image_ids
+
+
 def check_split(split_name, csv_path, project_root, image_dir, image_ext, max_open, image_index):
     rows, fieldnames = read_csv(csv_path)
     missing_columns = [column for column in REQUIRED_COLUMNS if column not in fieldnames]
@@ -125,6 +145,8 @@ def check_split(split_name, csv_path, project_root, image_dir, image_ext, max_op
         "existing_images": existing_images,
         "missing_images": len(missing_images),
         "missing_image_examples": missing_images[:20],
+        "all_image_ids": [row.get("image_id", "") for row in rows],
+        "missing_image_ids": missing_images,
         "label_distribution": count_distribution(rows, "label"),
         "sex_distribution": count_distribution(rows, "sex"),
         "age_group_distribution": count_distribution(rows, "age_group"),
@@ -147,8 +169,30 @@ def write_markdown(path, summary):
         f"- 总样本数：{summary['total_rows']}",
         f"- 图片存在数：{summary['total_existing_images']}",
         f"- 图片缺失数：{summary['total_missing_images']}",
+        f"- split 中不在图片目录的 ID 数：{summary['split_ids_missing_in_images_count']}",
+        f"- 图片目录中不在 split 的 ID 数：{summary['image_ids_not_used_by_split_count']}",
         "",
     ]
+
+    if summary["split_ids_missing_in_images_examples"]:
+        lines += [
+            "## 二、ID 差异示例",
+            "",
+            "### split 中存在但图片目录不存在",
+            "",
+            "```text",
+        ]
+        lines.extend(summary["split_ids_missing_in_images_examples"])
+        lines += ["```", ""]
+
+    if summary["image_ids_not_used_by_split_examples"]:
+        lines += [
+            "### 图片目录存在但 split 中没有使用",
+            "",
+            "```text",
+        ]
+        lines.extend(summary["image_ids_not_used_by_split_examples"])
+        lines += ["```", ""]
 
     for split in summary["splits"]:
         lines += [
@@ -239,6 +283,14 @@ def main():
             )
         )
 
+    split_image_ids = collect_split_image_ids(split_summaries)
+    indexed_image_ids = set(image_index)
+    split_ids_missing_in_images = sorted(split_image_ids - indexed_image_ids)
+    image_ids_not_used_by_split = sorted(indexed_image_ids - split_image_ids)
+
+    for split in split_summaries:
+        split.pop("all_image_ids", None)
+
     summary = {
         "splits_dir": str(splits_dir),
         "image_dir": str(image_root),
@@ -247,6 +299,10 @@ def main():
         "total_rows": sum(split["num_rows"] for split in split_summaries),
         "total_existing_images": sum(split["existing_images"] for split in split_summaries),
         "total_missing_images": sum(split["missing_images"] for split in split_summaries),
+        "split_ids_missing_in_images_count": len(split_ids_missing_in_images),
+        "split_ids_missing_in_images_examples": split_ids_missing_in_images[:50],
+        "image_ids_not_used_by_split_count": len(image_ids_not_used_by_split),
+        "image_ids_not_used_by_split_examples": image_ids_not_used_by_split[:50],
         "splits": split_summaries,
     }
 
@@ -255,6 +311,14 @@ def main():
     md_path = output_dir / "data_check_summary.md"
     json_path.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
     write_markdown(md_path, summary)
+    (output_dir / "split_ids_missing_in_images.txt").write_text(
+        "\n".join(split_ids_missing_in_images) + ("\n" if split_ids_missing_in_images else ""),
+        encoding="utf-8",
+    )
+    (output_dir / "image_ids_not_used_by_split.txt").write_text(
+        "\n".join(image_ids_not_used_by_split) + ("\n" if image_ids_not_used_by_split else ""),
+        encoding="utf-8",
+    )
 
     print(f"JSON 结果已保存：{json_path}")
     print(f"Markdown 结果已保存：{md_path}")

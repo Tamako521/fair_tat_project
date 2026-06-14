@@ -1,0 +1,41 @@
+实验配置：{
+  "splits_dir": "week7/experiments/isic2019_splits_available",
+  "image_dir": "data/isic2019/images",
+  "output_dir": "week7/experiments/stage02_isic2019_baseline_smoke",
+  "epochs": 1,
+  "batch_size": 32,
+  "num_workers": 4,
+  "pin_memory": true,
+  "amp": true,
+  "disable_cudnn": false,
+  "pretrained": false,
+  "image_size": 224,
+  "learning_rate": 0.0003,
+  "weight_decay": 0.0001,
+  "class_weight": "balanced",
+  "train_size": 512,
+  "val_size": 256,
+  "test_size": 256,
+  "seed": 42,
+  "device": "cuda",
+  "num_classes": 8,
+  "labels": [
+    "MEL",
+    "NV",
+    "BCC",
+    "AK",
+    "BKL",
+    "DF",
+    "VASC",
+    "SCC"
+  ]
+}
+epoch 1/1 | train loss: 2.2924 | train acc: 0.1777 | val acc: 0.1562 | val balanced acc: 0.1426 | val worst-class acc: 0.0000
+最终 val accuracy: 0.1562
+最终 val balanced accuracy: 0.1426
+最终 val worst-class accuracy: 0.0000
+最终 test accuracy: 0.1250
+最终 test balanced accuracy: 0.0845
+最终 test worst-class accuracy: 0.0000
+指标已保存：week7/experiments/stage02_isic2019_baseline_smoke/metrics.json
+模型已保存：week7/experiments/stage02_isic2019_baseline_smoke/model.pth

@@ -1,0 +1,113 @@
+{
+  "train": {
+    "num_rows": 17740,
+    "label_distribution": {
+      "NV": 9014,
+      "MEL": 3166,
+      "BCC": 2328,
+      "BKL": 1838,
+      "AK": 607,
+      "SCC": 440,
+      "VASC": 179,
+      "DF": 168
+    },
+    "sex_distribution": {
+      "male": 9325,
+      "female": 8133,
+      "unknown": 282
+    },
+    "age_group_distribution": {
+      "61+": 6186,
+      "46-60": 4623,
+      "31-45": 4578,
+      "0-30": 2036,
+      "unknown": 317
+    },
+    "anatom_site_distribution": {
+      "anterior torso": 4846,
+      "lower extremity": 3565,
+      "head/neck": 3259,
+      "upper extremity": 2030,
+      "posterior torso": 1877,
+      "unknown": 1835,
+      "palms/soles": 258,
+      "lateral torso": 42,
+      "oral/genital": 28
+    },
+    "unique_lesion_ids": 8227
+  },
+  "val": {
+    "num_rows": 3820,
+    "label_distribution": {
+      "NV": 1934,
+      "MEL": 688,
+      "BCC": 501,
+      "BKL": 396,
+      "AK": 132,
+      "SCC": 95,
+      "VASC": 38,
+      "DF": 36
+    },
+    "sex_distribution": {
+      "male": 1908,
+      "female": 1853,
+      "unknown": 59
+    },
+    "age_group_distribution": {
+      "61+": 1325,
+      "46-60": 987,
+      "31-45": 979,
+      "0-30": 462,
+      "unknown": 67
+    },
+    "anatom_site_distribution": {
+      "anterior torso": 1015,
+      "lower extremity": 710,
+      "head/neck": 671,
+      "upper extremity": 467,
+      "posterior torso": 448,
+      "unknown": 407,
+      "palms/soles": 72,
+      "oral/genital": 21,
+      "lateral torso": 9
+    },
+    "unique_lesion_ids": 1827
+  },
+  "test": {
+    "num_rows": 3771,
+    "label_distribution": {
+      "NV": 1927,
+      "MEL": 668,
+      "BCC": 494,
+      "BKL": 390,
+      "AK": 128,
+      "SCC": 93,
+      "VASC": 36,
+      "DF": 35
+    },
+    "sex_distribution": {
+      "male": 2053,
+      "female": 1675,
+      "unknown": 43
+    },
+    "age_group_distribution": {
+      "61+": 1258,
+      "46-60": 1085,
+      "31-45": 925,
+      "0-30": 450,
+      "unknown": 53
+    },
+    "anatom_site_distribution": {
+      "anterior torso": 1054,
+      "lower extremity": 715,
+      "head/neck": 657,
+      "posterior torso": 462,
+      "upper extremity": 413,
+      "unknown": 389,
+      "palms/soles": 68,
+      "oral/genital": 10,
+      "lateral torso": 3
+    },
+    "unique_lesion_ids": 1793
+  }
+}
